@@ -117,6 +117,17 @@
     max-width:520px; margin:30px auto; padding:16px 18px; border:1px solid var(--line);
     background:var(--panel); border-radius:12px; color:var(--muted); text-align:center; line-height:1.5
   }
+
+  .card{margin:10px 0; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px}
+  .card .ctitle{font-family:"JetBrains Mono",monospace; font-size:11.5px; letter-spacing:.08em; color:var(--accent); margin-bottom:8px}
+  .card .row{font-size:14px; margin:3px 0; color:var(--muted)}
+  .card .row b{color:var(--text); font-weight:500}
+  .card .cbody{white-space:pre-wrap; font-size:14.5px; margin:10px 0 4px; padding-top:10px; border-top:1px solid var(--line)}
+  .card .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  .card .btns a,.card .btns button{font:inherit; font-size:13px; text-decoration:none; padding:7px 12px; border-radius:8px;
+    border:1px solid var(--line); background:var(--panel2); color:var(--text); cursor:pointer}
+  .card .btns .primary{background:var(--accent); color:#04201a; border-color:var(--accent); font-weight:600}
+  .card .hint{font-size:12px; color:var(--muted); margin-top:8px}
 </style>
 </head>
 <body>
@@ -197,6 +208,118 @@
     return out;
   }
 
+  // ---------- Email & calendar action cards ----------
+  const ACTION_RE = /```(email|event)\s*\n?([\s\S]*?)```/g;
+  function el(tag, attrs, text){
+    const e = document.createElement(tag);
+    for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function btn(label, href, primary){
+    const a = el("a", { href, target: "_blank", rel: "noopener" }, label);
+    if (primary) a.className = "primary";
+    return a;
+  }
+  function copyBtn(label, text){
+    const b = el("button", { type: "button" }, label);
+    b.onclick = async () => {
+      try { await navigator.clipboard.writeText(text); b.textContent = "Copied ✓"; }
+      catch { b.textContent = "Couldn't copy"; }
+      setTimeout(() => b.textContent = label, 1500);
+    };
+    return b;
+  }
+  function emailCard(d){
+    const to = String(d.to || ""), su = String(d.subject || ""), body = String(d.body || "");
+    const enc = encodeURIComponent;
+    const card = el("div", { class: "card" });
+    card.append(el("div", { class: "ctitle" }, "✉ EMAIL DRAFT"));
+    const r1 = el("div", { class: "row" }); r1.append("To: ", el("b", null, to || "(add a recipient)")); card.append(r1);
+    const r2 = el("div", { class: "row" }); r2.append("Subject: ", el("b", null, su)); card.append(r2);
+    card.append(el("div", { class: "cbody" }, body));
+    const btns = el("div", { class: "btns" });
+    btns.append(
+      btn("Open in Gmail", `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(to)}&su=${enc(su)}&body=${enc(body)}`, true),
+      btn("Open in Outlook", `https://outlook.live.com/mail/0/deeplink/compose?to=${enc(to)}&subject=${enc(su)}&body=${enc(body)}`),
+      btn("Email app", `mailto:${enc(to)}?subject=${enc(su)}&body=${enc(body)}`),
+      copyBtn("Copy text", `To: ${to}\nSubject: ${su}\n\n${body}`)
+    );
+    card.append(btns, el("div", { class: "hint" }, "Opens a ready-to-send draft. Review it, then hit Send."));
+    return card;
+  }
+  function stamp(local, allDay){ // "2026-11-10T15:00" -> "20261110T150000" (or "20261110")
+    const m = String(local || "").match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
+    if (!m) return null;
+    return allDay || !m[4] ? `${m[1]}${m[2]}${m[3]}` : `${m[1]}${m[2]}${m[3]}T${m[4]}${m[5]}00`;
+  }
+  function addHour(local, h){
+    const d = new Date(local); if (isNaN(d)) return null;
+    d.setHours(d.getHours() + h);
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function nextDay(local){
+    const d = new Date(String(local).slice(0,10) + "T12:00"); if (isNaN(d)) return null;
+    d.setDate(d.getDate() + 1);
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  }
+  function eventCard(d){
+    const title = String(d.title || "Event"), loc = String(d.location || ""), details = String(d.details || "");
+    const allDay = !!d.allDay || !/T|\s\d/.test(String(d.start || ""));
+    const startL = String(d.start || "");
+    const endL = d.end ? String(d.end) : (allDay ? nextDay(startL) : addHour(startL, 1));
+    const s = stamp(startL, allDay), e = stamp(endL, allDay);
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const card = el("div", { class: "card" });
+    card.append(el("div", { class: "ctitle" }, "📅 CALENDAR EVENT"));
+    const rt = el("div", { class: "row" }); rt.append(el("b", null, title)); card.append(rt);
+    let when = startL;
+    try {
+      const sd = new Date(allDay ? startL.slice(0,10) + "T12:00" : startL);
+      when = allDay ? sd.toLocaleDateString(undefined, { dateStyle: "full" }) + " (all day)"
+        : sd.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }) +
+          (endL ? " – " + new Date(endL).toLocaleTimeString(undefined, { timeStyle: "short" }) : "");
+    } catch {}
+    const r = el("div", { class: "row" }); r.append("When: ", el("b", null, when)); card.append(r);
+    if (loc) { const r2 = el("div", { class: "row" }); r2.append("Where: ", el("b", null, loc)); card.append(r2); }
+    if (details) card.append(el("div", { class: "cbody" }, details));
+    const btns = el("div", { class: "btns" });
+    if (s && e) {
+      const enc = encodeURIComponent;
+      btns.append(btn("Add to Google Calendar",
+        `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${enc(title)}&dates=${s}/${e}&details=${enc(details)}&location=${enc(loc)}&ctz=${enc(tz)}`, true));
+      const icsEsc = t => t.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\;");
+      const dt = (k, v) => allDay ? `${k};VALUE=DATE:${v}` : `${k};TZID=${tz}:${v}`;
+      const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Quorvyn//EN","BEGIN:VEVENT",
+        `UID:${Date.now()}@quorvyn`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z`,
+        dt("DTSTART", s), dt("DTEND", e), `SUMMARY:${icsEsc(title)}`,
+        loc ? `LOCATION:${icsEsc(loc)}` : "", details ? `DESCRIPTION:${icsEsc(details)}` : "",
+        "END:VEVENT","END:VCALENDAR"].filter(Boolean).join("\r\n");
+      const a = el("a", { href: URL.createObjectURL(new Blob([ics], { type: "text/calendar" })),
+        download: title.replace(/[^\w\- ]+/g, "").trim().slice(0, 40) + ".ics" }, "Apple / Outlook (.ics)");
+      btns.append(a);
+    } else {
+      btns.append(el("span", { class: "hint" }, "I couldn't read the date. Try asking again with a specific date and time."));
+    }
+    card.append(btns, el("div", { class: "hint" }, "Opens the event ready to save. Check the details, then hit Save."));
+    return card;
+  }
+  function renderReply(bubble, text){
+    const cards = [];
+    const rest = text.replace(ACTION_RE, (m, kind, raw) => {
+      try {
+        const data = JSON.parse(raw.trim());
+        cards.push(kind === "email" ? emailCard(data) : eventCard(data));
+        return `\n\n%%CARD${cards.length - 1}%%\n\n`;
+      } catch { return m; }
+    });
+    bubble.innerHTML = md(rest).replace(/<p>%%CARD(\d+)%%<\/p>|%%CARD(\d+)%%/g,
+      (m, a, b) => `<div data-card="${a || b}"></div>`);
+    bubble.querySelectorAll("[data-card]").forEach(slot => slot.replaceWith(cards[+slot.dataset.card]));
+  }
+
   // ---------- UI helpers ----------
   function addMsg(role, html){
     hero.style.display = "none";
@@ -225,7 +348,7 @@
   function speak(text){
     if (!voiceOn) return;
     try {
-      const plain = text.replace(/```[\s\S]*?```/g, " (code omitted) ").replace(/[*#`>_]/g, "");
+      const plain = text.replace(ACTION_RE, " ").replace(/```[\s\S]*?```/g, " (code omitted) ").replace(/[*#`>_]/g, "");
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(plain);
       u.rate = 1.03; u.pitch = 0.95;
@@ -255,7 +378,7 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
       const reply = data.text || "(no reply)";
-      bubble.innerHTML = md(reply);
+      renderReply(bubble, reply);
       history.push({ role: "assistant", content: reply });
       addActions(bubble, reply);
       speak(reply);
