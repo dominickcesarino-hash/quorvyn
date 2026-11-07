@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QUORVYN — Personal AI Assistant</title>
+<meta name="description" content="Quorvyn (KOR-vin) is a free personal AI assistant. Plan, write, schedule and explain — just ask.">
+<meta name="theme-color" content="#07060d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07060d; --text:#f3f1ff; --muted:#a8a1c7; --dim:#7f7899;
+    --glass:rgba(255,255,255,.07); --glass2:rgba(255,255,255,.11); --line:rgba(255,255,255,.14); --line2:rgba(255,255,255,.22);
+    --cyan:#00d0ff; --violet:#6d3cff; --pink:#ff4fb3; --peach:#ffb86b; --danger:#ff8a9a; --ok:#7ef0c8;
+    --accent:#c6a8ff; --panel:#14111f; --panel2:rgba(255,255,255,.06);
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg); color:var(--text); font-family:Inter,system-ui,-apple-system,sans-serif; overflow:hidden; -webkit-font-smoothing:antialiased}
+  button{font-family:inherit; cursor:pointer}
+
+  /* Aurora background */
+  .aurora{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+  .blob{position:absolute; border-radius:50%; filter:blur(90px); will-change:transform}
+  .b1{width:640px;height:640px;background:var(--violet);top:-240px;left:-140px;opacity:.75;animation:drift1 22s ease-in-out infinite alternate}
+  .b2{width:540px;height:540px;background:var(--pink);top:120px;right:-180px;opacity:.45;animation:drift2 26s ease-in-out infinite alternate}
+  .b3{width:600px;height:480px;background:var(--cyan);bottom:-280px;left:30%;opacity:.38;animation:drift3 30s ease-in-out infinite alternate}
+  @keyframes drift1{to{transform:translate(120px,80px) scale(1.1)}}
+  @keyframes drift2{to{transform:translate(-100px,60px) scale(.9)}}
+  @keyframes drift3{to{transform:translate(-140px,-60px) scale(1.15)}}
+  body.thinking .blob{animation-duration:6s}
+  @media (prefers-reduced-motion:reduce){.blob,.orb{animation:none!important}}
+
+  /* Floating nav */
+  .nav{position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:40; display:flex; align-items:center; gap:4px;
+    padding:6px 6px 6px 18px; border-radius:999px; background:rgba(20,16,34,.55); border:1px solid var(--line);
+    backdrop-filter:blur(20px) saturate(1.4); -webkit-backdrop-filter:blur(20px) saturate(1.4); max-width:calc(100vw - 20px)}
+  .brand{display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:.24em; font-size:13.5px; margin-right:10px; white-space:nowrap}
+  .mini{width:16px; height:16px; border-radius:50%; background:conic-gradient(from 200deg,var(--cyan),var(--violet),var(--pink),var(--peach),var(--cyan));
+    box-shadow:0 0 12px rgba(160,110,255,.8)}
+  body.thinking .mini{animation:spin 1.2s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .dot{display:none}
+  .navbtn{background:transparent; border:none; color:#cfc9ea; font-size:13.5px; padding:8px 12px; border-radius:999px; display:flex; align-items:center; gap:6px; white-space:nowrap}
+  .navbtn:hover{background:var(--glass); color:#fff}
+  .navbtn[aria-pressed="true"]{background:var(--glass2); color:#fff}
+  .acct{display:flex; align-items:center; gap:8px; background:#fff; color:#13101f; border:none; font-weight:600; font-size:13.5px;
+    padding:6px 14px 6px 6px; border-radius:999px; margin-left:4px; white-space:nowrap}
+  .acct.signin{padding:8px 16px}
+  .ava{width:24px; height:24px; border-radius:50%; display:grid; place-items:center; flex:none; overflow:hidden; color:#fff; font-size:11px; font-weight:700;
+    background:linear-gradient(135deg,var(--pink),var(--violet))}
+  .ava img{width:100%; height:100%; object-fit:cover}
+  .ava.big{width:84px; height:84px; font-size:30px}
+
+  /* Scroll area */
+  main{position:relative; z-index:1; height:100%; overflow-y:auto; scroll-behavior:smooth}
+  .wrap{max-width:780px; margin:0 auto; padding:96px 20px 170px; min-height:100%}
+
+  /* Hero (empty state) */
+  .hero{min-height:calc(100vh - 150px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-bottom:20px}
+  .orb{width:132px; height:132px; border-radius:50%; position:relative; flex:none;
+    background:conic-gradient(from 200deg,var(--cyan),var(--violet),var(--pink),var(--peach),var(--cyan));
+    box-shadow:0 0 80px rgba(140,90,255,.65), inset 0 0 40px rgba(255,255,255,.35); animation:spin 18s linear infinite, float 6s ease-in-out infinite alternate}
+  .orb:after{content:""; position:absolute; inset:10px; border-radius:50%; background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.85),rgba(255,255,255,.08) 45%,transparent 70%)}
+  @keyframes float{to{translate:0 -8px}}
+  .hero h1{font-size:clamp(34px,6.4vw,58px); font-weight:600; letter-spacing:-.035em; line-height:1.06; margin:30px 0 0}
+  .grad{background:linear-gradient(90deg,#9ee8ff,#c6a8ff,#ffb0dc); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .hero .sub{color:#b9b2d6; font-size:17px; margin:12px 0 0}
+  #heroSlot{width:100%; display:flex; justify-content:center; margin-top:30px}
+  .chips{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:22px; width:min(880px,calc(100vw - 40px))}
+  .chip{text-align:left; padding:16px; border-radius:20px; background:var(--glass); border:1px solid rgba(255,255,255,.12); color:#e9e5ff;
+    font-size:14px; line-height:1.4; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); transition:transform .15s, border-color .15s, background .15s}
+  .chip:hover{transform:translateY(-3px); border-color:var(--line2); background:var(--glass2)}
+  .chip i{display:grid; place-items:center; width:34px; height:34px; border-radius:10px; margin-bottom:12px; font-style:normal; font-size:16px}
+  @media (max-width:760px){ .orb{width:104px;height:104px} .hero h1{margin-top:24px} .chips{grid-template-columns:1fr 1fr} .navbtn .lbl{display:none} .brand{letter-spacing:.16em;margin-right:4px} .acct .nm{display:none} .acct{padding:6px} .acct.signin{padding:8px 12px} }
+
+  /* Composer */
+  .composer{width:100%; max-width:740px}
+  .box{display:flex; align-items:flex-end; gap:8px; padding:8px 8px 8px 22px; border-radius:30px;
+    background:rgba(28,22,46,.6); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(24px) saturate(1.4); -webkit-backdrop-filter:blur(24px) saturate(1.4);
+    box-shadow:0 30px 80px rgba(20,0,60,.45); transition:border-color .2s, box-shadow .2s}
+  .box:focus-within{border-color:rgba(198,168,255,.55); box-shadow:0 30px 80px rgba(20,0,60,.45),0 0 0 4px rgba(150,110,255,.15)}
+  textarea{flex:1; resize:none; border:none; outline:none; background:transparent; color:var(--text); font:inherit; font-size:16px; line-height:1.5;
+    max-height:180px; padding:11px 0}
+  textarea::placeholder{color:var(--muted)}
+  .ic{width:44px; height:44px; border-radius:50%; display:grid; place-items:center; border:1px solid var(--line2); background:transparent; color:#e8e3ff; flex:none}
+  .ic:hover{background:var(--glass)}
+  .ic.listening{background:var(--pink); border-color:var(--pink); color:#fff; animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(255,79,179,.2)}}
+  .send{width:44px; height:44px; border-radius:50%; border:none; background:#fff; color:#13101f; display:grid; place-items:center; flex:none}
+  .send:disabled{opacity:.35; cursor:default}
+  .send.stop{background:var(--glass2); color:#fff; border:1px solid var(--line2)}
+  .foot{text-align:center; font-size:11.5px; color:var(--dim); margin-top:10px}
+  .dock{position:fixed; left:0; right:0; bottom:0; z-index:30; display:flex; justify-content:center; padding:30px 14px 14px;
+    background:linear-gradient(transparent, rgba(7,6,13,.85) 45%); pointer-events:none}
+  .dock .composer{pointer-events:auto}
+  .topfade{position:fixed; top:0; left:0; right:0; height:90px; z-index:20; pointer-events:none; background:linear-gradient(rgba(7,6,13,.9),transparent)}
+  body:not(.chatting) .dock, body:not(.chatting) .topfade{display:none}
+  body.chatting .hero{display:none}
+
+  /* Messages */
+  .msg{display:flex; gap:12px; margin:22px 0; animation:in .3s ease}
+  @keyframes in{from{opacity:0; transform:translateY(8px)}}
+  .avatar{flex:none; width:30px; height:30px; border-radius:50%; font-size:0;
+    background:conic-gradient(from 200deg,var(--cyan),var(--violet),var(--pink),var(--peach),var(--cyan)); box-shadow:0 0 16px rgba(140,90,255,.6)}
+  .msg.user{justify-content:flex-end}
+  .msg.user .avatar{display:none}
+  .bubble{max-width:86%; line-height:1.65; font-size:15.5px; word-wrap:break-word; min-width:0}
+  .msg.user .bubble{background:linear-gradient(135deg,rgba(109,60,255,.55),rgba(255,79,179,.35)); border:1px solid rgba(255,255,255,.18);
+    padding:11px 16px; border-radius:22px 22px 6px 22px; white-space:pre-wrap; backdrop-filter:blur(12px)}
+  .msg.ai .bubble{padding-top:3px; flex:1}
+  .bubble p{margin:0 0 10px} .bubble p:last-child{margin-bottom:0}
+  .bubble ul,.bubble ol{margin:6px 0 10px; padding-left:22px}
+  .bubble li{margin:3px 0}
+  .bubble strong{color:#fff}
+  .bubble code{font-family:"JetBrains Mono",monospace; font-size:13px; background:var(--glass); border:1px solid var(--line); padding:1px 6px; border-radius:6px}
+  .bubble pre{background:rgba(10,8,20,.7); border:1px solid var(--line); padding:14px; border-radius:14px; overflow-x:auto}
+  .bubble pre code{background:none; border:none; padding:0}
+  .bubble h4{margin:14px 0 6px; font-size:16px}
+  .bubble a{color:var(--accent)}
+  .thinking-txt{color:var(--muted); font-size:14px}
+  .msg.ai .thinking-txt{background:linear-gradient(90deg,var(--muted),#fff,var(--muted)); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation:shimmer 1.6s linear infinite}
+  @keyframes shimmer{to{background-position:-200% 0}}
+  .err{color:var(--danger)}
+  .actions{margin-top:8px; display:flex; gap:4px}
+  .actions button{background:none; border:none; color:var(--dim); font-size:12px; padding:4px 8px; border-radius:8px}
+  .actions button:hover{color:#fff; background:var(--glass)}
+
+  /* Email & calendar cards */
+  .card{margin:12px 0; background:var(--glass); border:1px solid var(--line); border-radius:20px; padding:16px 18px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px)}
+  .card .ctitle{font-size:12px; font-weight:600; letter-spacing:.08em; margin-bottom:10px; color:var(--accent)}
+  .card .row{font-size:14px; margin:3px 0; color:var(--muted)}
+  .card .row b{color:#fff; font-weight:500}
+  .card .cbody{white-space:pre-wrap; font-size:14.5px; margin:12px 0 4px; padding-top:12px; border-top:1px solid var(--line)}
+  .card .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .card .btns a,.card .btns button{font:inherit; font-size:13px; text-decoration:none; padding:8px 14px; border-radius:999px; border:1px solid var(--line2); background:transparent; color:#fff}
+  .card .btns a:hover,.card .btns button:hover{background:var(--glass)}
+  .card .btns .primary{background:#fff; color:#13101f; border-color:#fff; font-weight:600}
+  .card .btns .primary:hover{background:#f0ecff}
+  .card .hint{font-size:12px; color:var(--dim); margin-top:10px}
+
+  /* Drawer, modals */
+  .scrim{position:fixed; inset:0; z-index:55; display:none; background:rgba(5,4,10,.4)}
+  .scrim.open{display:block}
+  .drawer{position:fixed; top:12px; bottom:12px; left:12px; width:300px; max-width:calc(100vw - 24px); z-index:60; display:flex; flex-direction:column;
+    background:rgba(22,18,36,.75); border:1px solid var(--line); border-radius:24px; backdrop-filter:blur(30px) saturate(1.4); -webkit-backdrop-filter:blur(30px) saturate(1.4);
+    transform:translateX(calc(-100% - 20px)); transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+  .drawer.open{transform:none}
+  .drawer h3{margin:0; padding:20px 20px 10px; font-size:13px; letter-spacing:.14em; color:var(--muted); font-weight:600}
+  .drawer .list{flex:1; overflow-y:auto; padding:0 10px 16px}
+  .hitem{display:flex; align-items:center; gap:6px; padding:10px 12px; border-radius:12px; cursor:pointer; font-size:14px; color:#ddd8f5}
+  .hitem:hover{background:var(--glass)}
+  .hitem.active{background:var(--glass2); color:#fff}
+  .hitem span{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .hitem button{background:none; border:none; color:var(--dim); font-size:13px; opacity:.6}
+  .hitem button:hover{opacity:1; color:#fff}
+  .empty{color:var(--dim); font-size:13px; padding:10px 12px}
+  .overlay{position:fixed; inset:0; background:rgba(5,4,10,.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:none; z-index:70; align-items:center; justify-content:center; padding:16px}
+  .overlay.open{display:flex}
+  .modal{width:100%; max-width:410px; background:rgba(26,21,42,.85); border:1px solid var(--line); border-radius:28px; padding:28px;
+    backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); box-shadow:0 40px 100px rgba(0,0,0,.5); max-height:92vh; overflow-y:auto; position:relative; animation:in .25s ease}
+  .modal h2{margin:0 0 4px; font-size:22px; letter-spacing:-.02em}
+  .modal .sub{color:var(--muted); font-size:14px; margin:0 0 20px; line-height:1.5}
+  .modal label{display:block; font-size:13px; color:var(--muted); margin:14px 0 6px}
+  .modal input[type=text],.modal input[type=email],.modal input[type=password],.modal textarea{
+    width:100%; background:rgba(255,255,255,.06); border:1px solid var(--line); color:var(--text); border-radius:14px; padding:11px 14px; font:inherit; font-size:15px; outline:none}
+  .modal textarea{resize:vertical; min-height:96px; max-height:none}
+  .modal input:focus,.modal textarea:focus{border-color:rgba(198,168,255,.6)}
+  .bigbtn{width:100%; padding:12px; border-radius:999px; font:inherit; font-weight:600; font-size:15px; margin-top:16px; background:#fff; color:#13101f; border:none}
+  .bigbtn.alt{display:flex; align-items:center; justify-content:center; gap:10px}
+  .bigbtn.ghosty{background:transparent; color:var(--text); border:1px solid var(--line2); font-weight:500}
+  .bigbtn:disabled{opacity:.5; cursor:default}
+  .or{display:flex; align-items:center; gap:10px; color:var(--dim); font-size:12px; margin:18px 0 4px}
+  .or::before,.or::after{content:""; flex:1; height:1px; background:var(--line)}
+  .linkish{background:none; border:none; color:var(--accent); font:inherit; font-size:13px; padding:0}
+  .msgline{font-size:13px; margin-top:10px; min-height:18px}
+  .msgline.bad{color:var(--danger)} .msgline.good{color:var(--ok)}
+  .x{position:absolute; top:14px; right:16px; background:none; border:none; color:var(--muted); font-size:22px}
+  .uwrap{display:flex; align-items:center; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:14px; padding-left:14px; color:var(--muted); font-size:15px}
+  .uwrap:focus-within{border-color:rgba(198,168,255,.6)}
+  .modal .uwrap input{border:none!important; background:transparent!important; padding-left:2px!important; border-radius:0 14px 14px 0!important}
+  .uhint{font-size:12px; color:var(--dim); margin-top:6px; min-height:16px}
+  .uhint.bad{color:var(--danger)} .uhint.good{color:var(--ok)}
+  .handle{color:var(--accent); font-weight:500}
+  .photo-row{display:flex; align-items:center; gap:16px; margin:6px 0 4px}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<nav class="nav">
+  <div class="brand"><span class="mini"></span>QUORVYN<span class="dot off" id="status"></span></div>
+  <button class="navbtn" id="histBtn" title="Your chats" hidden>☰ <span class="lbl">Chats</span></button>
+  <button class="navbtn" id="newBtn" title="New chat">＋ <span class="lbl">New</span></button>
+  <button class="navbtn" id="voiceBtn" aria-pressed="false" title="Read replies aloud">🔊 <span class="lbl">Voice</span></button>
+  <button class="acct signin" id="acctBtn" hidden>Sign in</button>
+</nav>
+
+<main id="scroller">
+  <div class="wrap" id="wrap">
+    <section class="hero" id="hero">
+      <div class="orb" id="orb"></div>
+      <h1><span id="greet">Good evening.</span><br>What's on your mind?</h1>
+      <p class="sub">Ask anything — plan, write, schedule, or explain.</p>
+      <div id="heroSlot">
+        <div class="composer" id="composer">
+          <form class="box" id="form">
+            <textarea id="input" rows="1" placeholder="Message Quorvyn…" autocomplete="off"></textarea>
+            <button class="ic" id="micBtn" type="button" title="Talk to Quorvyn" hidden>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+            </button>
+            <button class="send" id="send" type="submit" aria-label="Send" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </button>
+          </form>
+          <div class="foot">Quorvyn can make mistakes. Don't share private info: chats are processed by Google's free Gemini API.</div>
+        </div>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip" data-q="Plan my week around three big goals"><i style="background:rgba(0,208,255,.2)">🗓</i>Plan my week around 3 goals</button>
+        <button class="chip" data-q="Help me write an email to my coach about missing practice"><i style="background:rgba(109,60,255,.28)">✉️</i>Email my coach about practice</button>
+        <button class="chip" data-q="Add study group next Tuesday at 4pm to my calendar"><i style="background:rgba(255,79,179,.22)">⏰</i>Add study group Tuesday 4pm</button>
+        <button class="chip" data-q="Explain how black holes form, simply"><i style="background:rgba(255,184,107,.22)">✨</i>Explain black holes simply</button>
+      </div>
+    </section>
+    <div id="log"></div>
+  </div>
+</main>
+<div class="topfade" aria-hidden="true"></div>
+<div class="dock" id="dock"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <h3>YOUR CHATS</h3>
+  <div class="list" id="histList"></div>
+</aside>
+
+<div class="overlay" id="authModal">
+  <div class="modal">
+    <button class="x" data-close>×</button>
+    <h2 id="authTitle">Sign in to Quorvyn</h2>
+    <p class="sub">Save your chats and let Quorvyn remember you.</p>
+    <button class="bigbtn alt" id="googleBtn" type="button"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google</button>
+    <div class="or">or use email</div>
+    <form id="emailForm">
+      <div id="nameWrap" hidden><label for="suName">Your name</label><input type="text" id="suName" maxlength="60" autocomplete="name"></div>
+      <label for="email">Email</label><input type="email" id="email" required autocomplete="email">
+      <label for="pw">Password</label><input type="password" id="pw" required minlength="6" autocomplete="current-password">
+      <button class="bigbtn" id="emailBtn" type="submit">Sign in</button>
+    </form>
+    <div class="msgline" id="authMsg"></div>
+    <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px">
+      <button class="linkish" id="switchMode" type="button">New here? Create an account</button>
+      <button class="linkish" id="forgotBtn" type="button">Forgot password?</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="profileModal">
+  <div class="modal">
+    <button class="x" data-close>×</button>
+    <h2>Your profile</h2>
+    <p class="sub" id="profEmail"></p>
+    <div class="photo-row">
+      <div class="ava big" id="profAva"></div>
+      <div>
+        <button class="bigbtn ghosty" style="margin:0;padding:8px 14px;width:auto" id="photoBtn" type="button">Change picture</button>
+        <input type="file" id="photoInput" accept="image/*" hidden>
+      </div>
+    </div>
+    <label for="profUser">Username</label>
+    <div class="uwrap"><span>@</span><input type="text" id="profUser" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="yourname"></div>
+    <div class="uhint" id="userHint">3–20 characters: letters, numbers or _</div>
+    <label for="profName">Name</label>
+    <input type="text" id="profName" maxlength="60">
+    <label for="profAbout">What should Quorvyn remember about you?</label>
+    <textarea id="profAbout" maxlength="1000" placeholder="e.g. I love basketball. Keep answers short. Call me Dom."></textarea>
+    <button class="bigbtn" id="saveProf" type="button">Save</button>
+    <div class="msgline" id="profMsg"></div>
+    <button class="bigbtn ghosty" id="signOutBtn" type="button">Sign out</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const log = $("log"), input = $("input"), send = $("send"), form = $("form");
+  const orb = $("orb"), hero = $("hero"), scroller = $("scroller"), statusDot = $("status");
+
+
+  let history = [];       // [{role, content}]
+  let busy = false, controller = null;
+  let voiceOn = false;
+
+  // ---------- Tiny, safe Markdown renderer ----------
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function inline(s){
+    return s
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  }
+  function md(src){
+    const parts = esc(src).split(/```/);
+    let out = "";
+    parts.forEach((chunk, i) => {
+      if (i % 2 === 1) { out += "<pre><code>" + chunk.replace(/^[a-z0-9+-]*\n/i, "") + "</code></pre>"; return; }
+      const lines = chunk.split("\n"); let list = null, para = [];
+      const flushP = () => { if (para.length){ out += "<p>" + inline(para.join("<br>")) + "</p>"; para = []; } };
+      const flushL = () => { if (list){ out += `</${list}>`; list = null; } };
+      for (const raw of lines) {
+        const line = raw.trimEnd();
+        let m;
+        if (!line.trim()) { flushP(); flushL(); continue; }
+        if ((m = line.match(/^#{1,6}\s+(.*)/))) { flushP(); flushL(); out += "<h4>" + inline(m[1]) + "</h4>"; continue; }
+        if ((m = line.match(/^\s*[-*•]\s+(.*)/))) { flushP(); if (list !== "ul"){ flushL(); out += "<ul>"; list = "ul"; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
+        if ((m = line.match(/^\s*\d+[.)]\s+(.*)/))) { flushP(); if (list !== "ol"){ flushL(); out += "<ol>"; list = "ol"; } out += "<li>" + inline(m[1]) + "</li>"; continue; }
+        flushL(); para.push(line);
+      }
+      flushP(); flushL();
+    });
+    return out;
+  }
+
+  // ---------- Email & calendar action cards ----------
+  const ACTION_RE = /```(email|event)\s*\n?([\s\S]*?)```/g;
+  function el(tag, attrs, text){
+    const e = document.createElement(tag);
+    for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function btn(label, href, primary){
+    const a = el("a", { href, target: "_blank", rel: "noopener" }, label);
+    if (primary) a.className = "primary";
+    return a;
+  }
+  function copyBtn(label, text){
+    const b = el("button", { type: "button" }, label);
+    b.onclick = async () => {
+      try { await navigator.clipboard.writeText(text); b.textContent = "Copied ✓"; }
+      catch { b.textContent = "Couldn't copy"; }
+      setTimeout(() => b.textContent = label, 1500);
+    };
+    return b;
+  }
+  function emailCard(d){
+    const to = String(d.to || ""), su = String(d.subject || ""), body = String(d.body || "");
+    const enc = encodeURIComponent;
+    const card = el("div", { class: "card" });
+    card.append(el("div", { class: "ctitle" }, "✉ EMAIL DRAFT"));
+    const r1 = el("div", { class: "row" }); r1.append("To: ", el("b", null, to || "(add a recipient)")); card.append(r1);
+    const r2 = el("div", { class: "row" }); r2.append("Subject: ", el("b", null, su)); card.append(r2);
+    card.append(el("div", { class: "cbody" }, body));
+    const btns = el("div", { class: "btns" });
+    btns.append(
+      btn("Open in Gmail", `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(to)}&su=${enc(su)}&body=${enc(body)}`, true),
+      btn("Open in Outlook", `https://outlook.live.com/mail/0/deeplink/compose?to=${enc(to)}&subject=${enc(su)}&body=${enc(body)}`),
+      btn("Email app", `mailto:${enc(to)}?subject=${enc(su)}&body=${enc(body)}`),
+      copyBtn("Copy text", `To: ${to}\nSubject: ${su}\n\n${body}`)
+    );
+    card.append(btns, el("div", { class: "hint" }, "Opens a ready-to-send draft. Review it, then hit Send."));
+    return card;
+  }
+  function stamp(local, allDay){ // "2026-11-10T15:00" -> "20261110T150000" (or "20261110")
+    const m = String(local || "").match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
+    if (!m) return null;
+    return allDay || !m[4] ? `${m[1]}${m[2]}${m[3]}` : `${m[1]}${m[2]}${m[3]}T${m[4]}${m[5]}00`;
+  }
+  function addHour(local, h){
+    const d = new Date(local); if (isNaN(d)) return null;
+    d.setHours(d.getHours() + h);
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function nextDay(local){
+    const d = new Date(String(local).slice(0,10) + "T12:00"); if (isNaN(d)) return null;
+    d.setDate(d.getDate() + 1);
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  }
+  function eventCard(d){
+    const title = String(d.title || "Event"), loc = String(d.location || ""), details = String(d.details || "");
+    const allDay = !!d.allDay || !/T|\s\d/.test(String(d.start || ""));
+    const startL = String(d.start || "");
+    const endL = d.end ? String(d.end) : (allDay ? nextDay(startL) : addHour(startL, 1));
+    const s = stamp(startL, allDay), e = stamp(endL, allDay);
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const card = el("div", { class: "card" });
+    card.append(el("div", { class: "ctitle" }, "📅 CALENDAR EVENT"));
+    const rt = el("div", { class: "row" }); rt.append(el("b", null, title)); card.append(rt);
+    let when = startL;
+    try {
+      const sd = new Date(allDay ? startL.slice(0,10) + "T12:00" : startL);
+      when = allDay ? sd.toLocaleDateString(undefined, { dateStyle: "full" }) + " (all day)"
+        : sd.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }) +
+          (endL ? " – " + new Date(endL).toLocaleTimeString(undefined, { timeStyle: "short" }) : "");
+    } catch {}
+    const r = el("div", { class: "row" }); r.append("When: ", el("b", null, when)); card.append(r);
+    if (loc) { const r2 = el("div", { class: "row" }); r2.append("Where: ", el("b", null, loc)); card.append(r2); }
+    if (details) card.append(el("div", { class: "cbody" }, details));
+    const btns = el("div", { class: "btns" });
+    if (s && e) {
+      const enc = encodeURIComponent;
+      btns.append(btn("Add to Google Calendar",
+        `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${enc(title)}&dates=${s}/${e}&details=${enc(details)}&location=${enc(loc)}&ctz=${enc(tz)}`, true));
+      const icsEsc = t => t.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\;");
+      const dt = (k, v) => allDay ? `${k};VALUE=DATE:${v}` : `${k};TZID=${tz}:${v}`;
+      const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Quorvyn//EN","BEGIN:VEVENT",
+        `UID:${Date.now()}@quorvyn`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z`,
+        dt("DTSTART", s), dt("DTEND", e), `SUMMARY:${icsEsc(title)}`,
+        loc ? `LOCATION:${icsEsc(loc)}` : "", details ? `DESCRIPTION:${icsEsc(details)}` : "",
+        "END:VEVENT","END:VCALENDAR"].filter(Boolean).join("\r\n");
+      const a = el("a", { href: URL.createObjectURL(new Blob([ics], { type: "text/calendar" })),
+        download: title.replace(/[^\w\- ]+/g, "").trim().slice(0, 40) + ".ics" }, "Apple / Outlook (.ics)");
+      btns.append(a);
+    } else {
+      btns.append(el("span", { class: "hint" }, "I couldn't read the date. Try asking again with a specific date and time."));
+    }
+    card.append(btns, el("div", { class: "hint" }, "Opens the event ready to save. Check the details, then hit Save."));
+    return card;
+  }
+  function renderReply(bubble, text){
+    const cards = [];
+    const rest = text.replace(ACTION_RE, (m, kind, raw) => {
+      try {
+        const data = JSON.parse(raw.trim());
+        cards.push(kind === "email" ? emailCard(data) : eventCard(data));
+        return `\n\n%%CARD${cards.length - 1}%%\n\n`;
+      } catch { return m; }
+    });
+    bubble.innerHTML = md(rest).replace(/<p>%%CARD(\d+)%%<\/p>|%%CARD(\d+)%%/g,
+      (m, a, b) => `<div data-card="${a || b}"></div>`);
+    bubble.querySelectorAll("[data-card]").forEach(slot => slot.replaceWith(cards[+slot.dataset.card]));
+  }
+
+  // ---------- Aurora layout helpers ----------
+  const composer = $("composer"), heroSlot = $("heroSlot"), dockEl = $("dock");
+  function setChatting(on){
+    document.body.classList.toggle("chatting", on);
+    const target = on ? dockEl : heroSlot;
+    if (composer.parentElement !== target) target.appendChild(composer);
+  }
+  function setGreeting(){
+    const h = new Date().getHours();
+    const g = h < 5 ? "Good evening" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+    const el = $("greet"); el.textContent = "";
+    const first = (typeof user !== "undefined" && user && profile.name) ? profile.name.trim().split(/\s+/)[0] : "";
+    if (first) { el.append(g + ", "); const s = document.createElement("span"); s.className = "grad"; s.textContent = first + "."; el.append(s); }
+    else el.textContent = g + ".";
+  }
+
+  // ---------- UI helpers ----------
+  function addMsg(role, html){
+    setChatting(true);
+    const el = document.createElement("div");
+    el.className = "msg " + (role === "user" ? "user" : "ai");
+    el.innerHTML = `<div class="avatar">${role === "user" ? "YOU" : "Q"}</div><div class="bubble"></div>`;
+    const b = el.querySelector(".bubble");
+    if (role === "user") b.textContent = html; else b.innerHTML = html;
+    log.appendChild(el);
+    scrollDown();
+    return b;
+  }
+  function scrollDown(){ scroller.scrollTop = scroller.scrollHeight; }
+  function setBusy(v){
+    busy = v; document.body.classList.toggle("thinking", v);
+    send.classList.toggle("stop", v);
+    send.innerHTML = v
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    send.setAttribute("aria-label", v ? "Stop" : "Send");
+    updateSend();
+  }
+  function updateSend(){ send.disabled = !busy && !input.value.trim(); }
+  function autosize(){ input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 180) + "px"; }
+
+  function speak(text){
+    if (!voiceOn) return;
+    try {
+      const plain = text.replace(ACTION_RE, " ").replace(/```[\s\S]*?```/g, " (code omitted) ").replace(/[*#`>_]/g, "");
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(plain);
+      u.rate = 1.03; u.pitch = 0.95;
+      speechSynthesis.speak(u);
+    } catch (e) { /* voice not supported here */ }
+  }
+
+  // ---------- Conversation ----------
+  async function ask(text){
+    if (busy) return;
+    addMsg("user", text);
+    history.push({ role: "user", content: text });
+    const bubble = addMsg("ai", '<span class="thinking-txt">Thinking…</span>');
+    setBusy(true);
+    controller = new AbortController();
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          messages: history.slice(-20),
+          profile: profileForAI(),
+          now: new Date().toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }),
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+      const reply = data.text || "(no reply)";
+      renderReply(bubble, reply);
+      history.push({ role: "assistant", content: reply });
+      saveChat();
+      addActions(bubble, reply);
+      speak(reply);
+      scrollDown();
+    } catch (err) {
+      history.pop();
+      bubble.innerHTML = controller.signal.aborted
+        ? '<p class="thinking-txt">Stopped.</p>'
+        : `<p class="err">${esc(err.message || "Something went wrong.")}</p>`;
+    } finally {
+      controller = null;
+      setBusy(false);
+      input.focus();
+    }
+  }
+
+  function addActions(bubble, text){
+    const row = document.createElement("div");
+    row.className = "actions";
+    const copy = document.createElement("button");
+    copy.textContent = "Copy";
+    copy.onclick = async () => {
+      try { await navigator.clipboard.writeText(text); copy.textContent = "Copied ✓"; }
+      catch { copy.textContent = "Couldn't copy"; }
+      setTimeout(() => copy.textContent = "Copy", 1500);
+    };
+    const say = document.createElement("button");
+    say.textContent = "Read aloud";
+    say.onclick = () => { const was = voiceOn; voiceOn = true; speak(text); voiceOn = was; };
+    row.append(copy, say);
+    bubble.appendChild(row);
+  }
+
+  // ---------- Accounts (Firebase) ----------
+  // Paste your Firebase web config here (it's safe to be public).
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyAYbOHkDHruMjlQEbOizq_8_Ylihfj09C0",
+    authDomain: "quorvyn1.firebaseapp.com",
+    projectId: "quorvyn1",
+    storageBucket: "quorvyn1.firebasestorage.app",
+    messagingSenderId: "555584065909",
+    appId: "1:555584065909:web:bd14ff5338f66092a0833c"
+  };
+
+  const FB = "https://www.gstatic.com/firebasejs/10.14.1/";
+  let fb = null, user = null, profile = { name: "", about: "", photo: "", username: "" }, chatId = null;
+  const acctBtn = $("acctBtn"), histBtn = $("histBtn"), drawer = $("drawer"), scrim = $("scrim");
+
+  function profileForAI(){
+    if (!user) return null;
+    return { name: (profile.name || "").slice(0, 60), about: (profile.about || "").slice(0, 1000) };
+  }
+  function avatarInto(box, p){
+    box.innerHTML = "";
+    if (p.photo) { const i = document.createElement("img"); i.src = p.photo; i.alt = ""; i.referrerPolicy = "no-referrer"; box.append(i); }
+    else box.textContent = ((p.name || "?").trim()[0] || "?").toUpperCase();
+  }
+  function openModal(id){ $(id).classList.add("open"); }
+  function closeModal(id){ $(id).classList.remove("open"); }
+  document.querySelectorAll(".overlay").forEach(o => {
+    o.addEventListener("click", e => { if (e.target === o || e.target.hasAttribute("data-close")) o.classList.remove("open"); });
+  });
+
+  function friendly(err){
+    const c = (err && err.code) || "";
+    return ({
+      "auth/invalid-email": "That email doesn't look right.",
+      "auth/missing-password": "Please enter a password.",
+      "auth/weak-password": "Password needs at least 6 characters.",
+      "auth/email-already-in-use": "There's already an account with that email. Try signing in.",
+      "auth/invalid-credential": "Wrong email or password.",
+      "auth/wrong-password": "Wrong email or password.",
+      "auth/user-not-found": "No account with that email. Try creating one.",
+      "auth/too-many-requests": "Too many tries. Wait a minute and try again.",
+      "auth/popup-closed-by-user": "Sign-in window was closed.",
+      "auth/popup-blocked": "Your browser blocked the sign-in window. Allow pop-ups and try again.",
+      "auth/unauthorized-domain": "This website isn't approved in Firebase yet (Authorized domains).",
+      "auth/network-request-failed": "Network problem. Check your connection."
+    })[c] || "Something went wrong. Please try again.";
+  }
+
+  async function initAccounts(){
+    if (!FIREBASE_CONFIG) return;            // accounts not set up yet
+    try {
+      const [app, auth, fs] = await Promise.all([
+        import(FB + "firebase-app.js"), import(FB + "firebase-auth.js"), import(FB + "firebase-firestore.js")
+      ]);
+      const a = app.initializeApp(FIREBASE_CONFIG);
+      fb = { auth: auth.getAuth(a), db: fs.getFirestore(a), A: auth, F: fs };
+    } catch (e) { console.error("Accounts unavailable", e); return; }
+    acctBtn.hidden = false;
+    fb.A.onAuthStateChanged(fb.auth, async u => {
+      user = u; chatId = null;
+      if (u) {
+        histBtn.hidden = false;
+        await loadProfile();
+        loadHistory();
+        if (!profile.username) {
+          renderAcct(); acctBtn.click();
+          const m = $("profMsg"); m.textContent = "Pick a username to finish setting up your account."; m.className = "msgline good";
+          setTimeout(() => $("profUser").focus(), 50);
+        }
+      } else {
+        histBtn.hidden = true; closeDrawer();
+        profile = { name: "", about: "", photo: "", username: "" };
+      }
+      renderAcct();
+    });
+  }
+
+  function renderAcct(){
+    if (!user) { acctBtn.className = "acct signin"; acctBtn.textContent = "Sign in"; setGreeting(); return; }
+    acctBtn.className = "acct"; acctBtn.innerHTML = "";
+    const av = document.createElement("span"); av.className = "ava"; avatarInto(av, profile);
+    const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = profile.name || "Profile";
+    acctBtn.append(av, nm);
+    setGreeting();
+  }
+
+  async function loadProfile(){
+    const { doc, getDoc, setDoc, serverTimestamp } = fb.F;
+    const ref = doc(fb.db, "users", user.uid);
+    try {
+      const snap = await getDoc(ref);
+      if (snap.exists()) profile = Object.assign({ name: "", about: "", photo: "", username: "" }, snap.data());
+      else {
+        profile = { name: user.displayName || "", about: "", photo: user.photoURL || "" };
+        await setDoc(ref, { ...profile, createdAt: serverTimestamp() });
+      }
+    } catch (e) { console.error(e); profile = { name: user.displayName || "", about: "", photo: user.photoURL || "" }; }
+  }
+
+  // ---- Sign in / sign up ----
+  let signUpMode = false;
+  function setMode(up){
+    signUpMode = up;
+    $("authTitle").textContent = up ? "Create your account" : "Sign in to Quorvyn";
+    $("nameWrap").hidden = !up;
+    $("emailBtn").textContent = up ? "Create account" : "Sign in";
+    $("pw").autocomplete = up ? "new-password" : "current-password";
+    $("switchMode").textContent = up ? "Already have an account? Sign in" : "New here? Create an account";
+    $("forgotBtn").hidden = up;
+    $("authMsg").textContent = "";
+  }
+  acctBtn.onclick = () => {
+    if (!user) { setMode(false); openModal("authModal"); return; }
+    $("profEmail").textContent = (profile.username ? "@" + profile.username + " · " : "") + (user.email || "");
+    $("profUser").value = profile.username || "";
+    setHint("3–20 characters: letters, numbers or _");
+    $("profName").value = profile.name || "";
+    $("profAbout").value = profile.about || "";
+    avatarInto($("profAva"), profile);
+    $("profMsg").textContent = ""; $("profMsg").className = "msgline";
+    pendingPhoto = null;
+    openModal("profileModal");
+  };
+  $("switchMode").onclick = () => setMode(!signUpMode);
+  function authMsg(t, good){ const m = $("authMsg"); m.textContent = t; m.className = "msgline " + (good ? "good" : "bad"); }
+
+  $("googleBtn").onclick = async () => {
+    try {
+      await fb.A.signInWithPopup(fb.auth, new fb.A.GoogleAuthProvider());
+      closeModal("authModal");
+    } catch (e) { authMsg(friendly(e)); }
+  };
+  $("emailForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = $("email").value.trim(), pw = $("pw").value, btn = $("emailBtn");
+    btn.disabled = true;
+    try {
+      if (signUpMode) {
+        const name = $("suName").value.trim();
+        if (!name) { authMsg("Please enter your name."); btn.disabled = false; return; }
+        const cred = await fb.A.createUserWithEmailAndPassword(fb.auth, email, pw);
+        await fb.A.updateProfile(cred.user, { displayName: name });
+        const { doc, setDoc, serverTimestamp } = fb.F;
+        profile = { name, about: "", photo: "" };
+        await setDoc(doc(fb.db, "users", cred.user.uid), { ...profile, createdAt: serverTimestamp() });
+        renderAcct();
+      } else {
+        await fb.A.signInWithEmailAndPassword(fb.auth, email, pw);
+      }
+      $("pw").value = "";
+      closeModal("authModal");
+    } catch (err) { authMsg(friendly(err)); }
+    btn.disabled = false;
+  });
+  $("forgotBtn").onclick = async () => {
+    const email = $("email").value.trim();
+    if (!email) { authMsg("Type your email above first, then click Forgot password."); return; }
+    try { await fb.A.sendPasswordResetEmail(fb.auth, email); authMsg("Check your inbox for a reset link.", true); }
+    catch (e) { authMsg(friendly(e)); }
+  };
+
+  // ---- Profile ----
+  let pendingPhoto = null;
+  $("photoBtn").onclick = () => $("photoInput").click();
+  $("photoInput").onchange = async e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f || !f.type.startsWith("image/")) return;
+    try {
+      const img = await createImageBitmap(f);
+      const S = 160, c = document.createElement("canvas"); c.width = c.height = S;
+      const k = Math.max(S / img.width, S / img.height), w = img.width * k, h = img.height * k;
+      c.getContext("2d").drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+      pendingPhoto = c.toDataURL("image/jpeg", 0.85);
+      avatarInto($("profAva"), { ...profile, photo: pendingPhoto });
+    } catch { const m = $("profMsg"); m.textContent = "Couldn't read that picture. Try another one."; m.className = "msgline bad"; }
+  };
+  // ---- Usernames ----
+  const USER_RE = /^[a-z0-9_]{3,20}$/;
+  function setHint(t, kind){ const h = $("userHint"); h.textContent = t; h.className = "uhint" + (kind ? " " + kind : ""); }
+  let checkTimer = null, checkSeq = 0;
+  $("profUser").addEventListener("input", e => {
+    const el = e.target, clean = el.value.toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 20);
+    if (el.value !== clean) el.value = clean;
+    clearTimeout(checkTimer);
+    if ($("profMsg").classList.contains("bad")) { $("profMsg").textContent = ""; $("profMsg").className = "msgline"; }
+    const u = clean, seq = ++checkSeq;
+    if (!u) { setHint("3–20 characters: letters, numbers or _"); return; }
+    if (u === profile.username) { setHint("That's your username ✓", "good"); return; }
+    if (!USER_RE.test(u)) { setHint("Needs at least 3 characters.", "bad"); return; }
+    setHint("Checking…");
+    checkTimer = setTimeout(async () => {
+      try {
+        const snap = await fb.F.getDoc(fb.F.doc(fb.db, "usernames", u));
+        if (seq !== checkSeq) return;
+        snap.exists() ? setHint("@" + u + " is taken. Try another.", "bad") : setHint("@" + u + " is available ✓", "good");
+      } catch { if (seq === checkSeq) setHint(""); }
+    }, 400);
+  });
+
+  $("saveProf").onclick = async () => {
+    const m = $("profMsg"), btn = $("saveProf");
+    const upd = { name: $("profName").value.trim().slice(0, 60), about: $("profAbout").value.trim().slice(0, 1000) };
+    if (pendingPhoto) upd.photo = pendingPhoto;
+    const newU = $("profUser").value.trim().toLowerCase(), oldU = profile.username || "";
+    const changingU = newU !== oldU;
+    if (changingU && !USER_RE.test(newU)) {
+      m.textContent = newU ? "Usernames need 3–20 letters, numbers or _." : "Please pick a username."; m.className = "msgline bad"; return;
+    }
+    if (changingU) upd.username = newU;
+    btn.disabled = true;
+    try {
+      const { doc, writeBatch, serverTimestamp } = fb.F;
+      const batch = writeBatch(fb.db);
+      if (changingU) {
+        batch.set(doc(fb.db, "usernames", newU), { uid: user.uid, createdAt: serverTimestamp() });
+        if (oldU) batch.delete(doc(fb.db, "usernames", oldU));
+      }
+      batch.set(doc(fb.db, "users", user.uid), upd, { merge: true });
+      await batch.commit();
+      Object.assign(profile, upd); pendingPhoto = null;
+      renderAcct();
+      $("profEmail").textContent = "@" + profile.username + " · " + (user.email || "");
+      if (changingU) setHint("That's your username ✓", "good");
+      m.textContent = "Saved ✓"; m.className = "msgline good";
+    } catch (e) {
+      console.error(e);
+      const taken = e && (e.code === "permission-denied" || e.code === "firestore/permission-denied");
+      m.textContent = taken && changingU ? "@" + newU + " is taken. Try another." : "Couldn't save. Please try again.";
+      m.className = "msgline bad";
+    }
+    btn.disabled = false;
+  };
+  $("signOutBtn").onclick = async () => {
+    await fb.A.signOut(fb.auth);
+    closeModal("profileModal");
+    $("newBtn").click();
+  };
+
+  // ---- Chat history ----
+  function openDrawer(){ drawer.classList.add("open"); scrim.classList.add("open"); }
+  function closeDrawer(){ drawer.classList.remove("open"); scrim.classList.remove("open"); }
+  histBtn.onclick = () => drawer.classList.contains("open") ? closeDrawer() : openDrawer();
+  scrim.onclick = closeDrawer;
+
+  let chatsCache = [];
+  async function loadHistory(){
+    if (!user) return;
+    const { collection, query, orderBy, limit, getDocs } = fb.F;
+    try {
+      const snap = await getDocs(query(collection(fb.db, "users", user.uid, "chats"), orderBy("updatedAt", "desc"), limit(50)));
+      chatsCache = snap.docs.map(d => ({ id: d.id, title: d.data().title || "Untitled chat" }));
+    } catch (e) { console.error(e); chatsCache = []; }
+    drawList();
+  }
+  function drawList(){
+    const list = $("histList"); list.innerHTML = "";
+    if (!chatsCache.length) { const e = document.createElement("div"); e.className = "empty"; e.textContent = "No saved chats yet. Start talking!"; list.append(e); return; }
+    for (const c of chatsCache) {
+      const row = document.createElement("div"); row.className = "hitem"; row.dataset.id = c.id;
+      const t = document.createElement("span"); t.textContent = c.title;
+      const del = document.createElement("button"); del.title = "Delete chat"; del.textContent = "🗑";
+      del.onclick = async ev => {
+        ev.stopPropagation();
+        if (!row.dataset.confirm) { row.dataset.confirm = "1"; del.textContent = "Delete?"; setTimeout(() => { row.dataset.confirm = ""; del.textContent = "🗑"; }, 2500); return; }
+        try { await fb.F.deleteDoc(fb.F.doc(fb.db, "users", user.uid, "chats", c.id)); } catch (e) { console.error(e); }
+        if (chatId === c.id) $("newBtn").click();
+        loadHistory();
+      };
+      row.append(t, del);
+      row.onclick = () => openChat(c.id);
+      list.append(row);
+    }
+    markActive();
+  }
+  function markActive(){
+    document.querySelectorAll(".hitem").forEach(r => r.classList.toggle("active", r.dataset.id === chatId));
+  }
+  async function openChat(id){
+    if (busy) return;
+    try {
+      const snap = await fb.F.getDoc(fb.F.doc(fb.db, "users", user.uid, "chats", id));
+      if (!snap.exists()) return;
+      $("newBtn").click();
+      chatId = id;
+      history = (snap.data().messages || []).filter(m => m && typeof m.content === "string");
+      for (const m of history) {
+        if (m.role === "user") addMsg("user", m.content);
+        else { const b = addMsg("ai", ""); renderReply(b, m.content); addActions(b, m.content); }
+      }
+      markActive(); closeDrawer();
+    } catch (e) { console.error(e); }
+  }
+  async function saveChat(){
+    if (!user || !fb) return;
+    const { doc, collection, setDoc, serverTimestamp } = fb.F;
+    try {
+      const isNew = !chatId;
+      const ref = chatId ? doc(fb.db, "users", user.uid, "chats", chatId) : doc(collection(fb.db, "users", user.uid, "chats"));
+      chatId = ref.id;
+      const firstUser = (history.find(m => m.role === "user") || {}).content || "New chat";
+      await setDoc(ref, {
+        title: firstUser.replace(/\s+/g, " ").slice(0, 60),
+        messages: history.slice(-100),
+        updatedAt: serverTimestamp()
+      });
+      if (isNew) loadHistory(); else { chatsCache = [chatsCache.find(c => c.id === chatId) || { id: chatId, title: firstUser.slice(0, 60) }, ...chatsCache.filter(c => c.id !== chatId)]; drawList(); }
+    } catch (e) { console.error("Couldn't save chat", e); }
+  }
+  initAccounts();
+
+  // ---------- Events ----------
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (busy) { controller && controller.abort(); return; }
+    const t = input.value.trim(); if (!t) return;
+    input.value = ""; autosize(); updateSend();
+    ask(t);
+  });
+  input.addEventListener("input", () => { autosize(); updateSend(); });
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+  });
+  $("chips").addEventListener("click", e => {
+    const c = e.target.closest(".chip");
+    if (c && !busy) ask(c.dataset.q || c.textContent.trim());
+  });
+  $("newBtn").onclick = () => {
+    if (controller) controller.abort();
+    history = []; log.innerHTML = ""; setChatting(false); chatId = null; markActive(); scroller.scrollTop = 0;
+    try { speechSynthesis.cancel(); } catch {}
+    input.focus();
+  };
+  $("voiceBtn").onclick = (e) => {
+    voiceOn = !voiceOn;
+    e.currentTarget.setAttribute("aria-pressed", String(voiceOn));
+    if (!voiceOn) { try { speechSynthesis.cancel(); } catch {} }
+  };
+
+  setGreeting();
+
+  // ---------- Talk to Quorvyn (speech to text) ----------
+  (function(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const mic = $("micBtn");
+    if (!SR) return;               // browser doesn't support it: keep the button hidden
+    mic.hidden = false;
+    let rec = null, base = "";
+    mic.onclick = () => {
+      if (rec) { rec.stop(); return; }
+      rec = new SR();
+      rec.lang = navigator.language || "en-US";
+      rec.interimResults = true;
+      rec.continuous = false;
+      base = input.value ? input.value.replace(/\s*$/, " ") : "";
+      rec.onresult = ev => {
+        let t = "";
+        for (const r of ev.results) t += r[0].transcript;
+        input.value = base + t; autosize(); updateSend();
+      };
+      rec.onend = () => { mic.classList.remove("listening"); rec = null; input.focus(); };
+      rec.onerror = () => { mic.classList.remove("listening"); rec = null; };
+      mic.classList.add("listening");
+      try { rec.start(); } catch { mic.classList.remove("listening"); rec = null; }
+    };
+  })();
+
+  statusDot.classList.remove("off"); statusDot.title = "Online";
+  updateSend();
+  input.focus();
+})();
+</script>
+</body>
+</html>
