@@ -15,3 +15,4 @@ A free personal AI assistant website, powered by Google's free Gemini API.
 
 Settings such as the model and the reply length are at the top of `chat.mjs`.
 To use a different model, add a `GEMINI_MODEL` environment variable in Netlify.
+Updated
