@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try{var qt=localStorage.getItem("qv-theme");if(qt)document.documentElement.dataset.theme=qt}catch(e){}</script>
 <style>
   :root{
     --bg:#07060d; --text:#f3f1ff; --muted:#a8a1c7; --dim:#7f7899;
@@ -45,7 +46,6 @@
   body.signedin #voiceBtn{display:none}
   .navR .acct{margin-left:2px}
   .clock{padding:0 8px 0 10px; font-size:12.5px; font-weight:500; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; letter-spacing:.02em}
-  @media (max-width:360px){ .clock{display:none} }
   .caret{font-size:10px; opacity:.6; margin-left:2px}
   .amenu{position:fixed; top:68px; right:14px; z-index:45; width:250px; padding:8px; border-radius:20px; background:rgba(26,21,42,.92);
     border:1px solid var(--line); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); box-shadow:0 30px 80px rgba(0,0,0,.45); animation:in .18s ease}
@@ -362,6 +362,163 @@
   .tourBtns{display:flex; align-items:center; gap:8px; margin-top:14px}
   .tourSkip{background:none; border:none; color:var(--dim); font:inherit; font-size:13px; padding:6px 0; cursor:pointer}
   .tourSkip:hover{color:#fff}
+
+  /* ===== Study tools, tasks, today, timer, themes ===== */
+  .clock{border:none; background:transparent; font-family:inherit; cursor:pointer; border-radius:999px; height:38px; display:flex; align-items:center; gap:5px}
+  .clock:hover{background:var(--glass); color:var(--text)}
+  .clock.run{color:#04121a; background:linear-gradient(90deg,var(--cyan),#8fe9ff); font-weight:700; padding:0 12px}
+  .clock.run.brk{background:linear-gradient(90deg,var(--ok),#c9ffe9)}
+  .clock.run.paused{background:var(--glass2); color:var(--text)}
+  @media (max-width:520px){ #helpBtn{display:none} }
+  .pop{position:fixed; top:68px; right:14px; z-index:45; width:280px; max-width:calc(100vw - 28px); padding:16px; border-radius:22px; background:rgba(26,21,42,.94);
+    border:1px solid var(--line); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); box-shadow:0 30px 80px rgba(0,0,0,.45); animation:in .18s ease}
+  .tmode{display:flex; gap:6px}
+  .tmode button,.tbtns button{flex:1; font:inherit; font-size:13px; padding:8px 10px; border-radius:999px; border:1px solid var(--line2); background:transparent; color:var(--text)}
+  .tmode button.on,.tbtns .primary{background:#fff; color:#13101f; border-color:#fff; font-weight:600}
+  .tbig{font-size:52px; font-weight:600; letter-spacing:-.04em; text-align:center; margin:12px 0 2px; font-variant-numeric:tabular-nums}
+  .tlabel{text-align:center; color:var(--muted); font-size:13px; margin-bottom:12px}
+  .tbtns{display:flex; gap:6px}
+  .tnote{font-size:12px; color:var(--dim); margin-top:12px; text-align:center; line-height:1.45}
+  .tbar{height:4px; border-radius:4px; background:var(--glass2); overflow:hidden; margin-top:4px}
+  .tbar i{display:block; height:100%; background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink)); width:0; transition:width .5s}
+
+  .tools{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:16px; width:min(880px,calc(100vw - 40px))}
+  .tools button{font:inherit; font-size:13.5px; padding:9px 14px; border-radius:999px; border:1px solid var(--line); background:var(--glass); color:#e9e5ff; display:flex; align-items:center; gap:6px}
+  .tools button:hover{background:var(--glass2); border-color:var(--line2)}
+
+  .today{position:fixed; top:72px; right:14px; z-index:25; width:230px; padding:14px 16px; border-radius:22px; text-align:left; color:var(--text);
+    background:rgba(20,16,34,.5); border:1px solid var(--line); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px)}
+  body.chatting .today{display:none}
+  .today .tdh{font-size:11px; letter-spacing:.14em; color:var(--accent); font-weight:600; text-transform:uppercase}
+  .today .tdd{font-size:16px; font-weight:600; margin:2px 0 8px}
+  .today .tds{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px}
+  .today .tds span{font-size:12px; padding:3px 9px; border-radius:999px; background:var(--glass2)}
+  .today .tdq{font-size:12.5px; color:var(--muted); line-height:1.45; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-style:italic}
+  .today .tdl{display:flex; flex-direction:column; gap:2px}
+  .today .tdnone{font-size:13px; color:var(--muted)}
+  .today .tdmore{background:none; border:none; color:var(--accent); font:inherit; font-size:12.5px; padding:6px 0 0; text-align:left}
+  .today .tdsum{display:none}
+  @media (max-width:1180px){
+    .today{position:static; width:auto; padding:7px 14px; border-radius:999px; margin:-12px 0 22px; cursor:pointer}
+    .today > :not(.tdsum){display:none!important}
+    .today .tdsum{display:block; font-size:13px; color:var(--muted)}
+    .today .tdsum b{color:var(--text); font-weight:600}
+  }
+
+  .task{display:flex; align-items:flex-start; gap:10px; padding:8px 4px; border-radius:10px; font-size:14px}
+  .task + .task{border-top:1px solid var(--line)}
+  .task input[type=checkbox]{width:18px; height:18px; margin:2px 0 0; accent-color:var(--violet); flex:none}
+  .task .tt{flex:1; min-width:0; word-wrap:break-word}
+  .task .tdue{display:block; font-size:12px; color:var(--dim)}
+  .task .tdue.late{color:var(--danger)} .task .tdue.soon{color:var(--peach)}
+  .task.done .tt{text-decoration:line-through; color:var(--dim)}
+  .task .tdel{background:none; border:none; color:var(--dim); font-size:18px; line-height:1; padding:0 4px; opacity:.6}
+  .task .tdel:hover{opacity:1; color:var(--text)}
+  .today .task{padding:4px 0; font-size:13px} .today .task + .task{border:none}
+  .addrow{display:flex; gap:8px; flex-wrap:wrap}
+  .modal .addrow input[type=text]{flex:1 1 180px; width:auto}
+  .modal input[type=datetime-local],.modal select{background:rgba(255,255,255,.06); border:1px solid var(--line); color:var(--text); border-radius:14px; padding:10px 12px; font:inherit; font-size:14px; outline:none; color-scheme:dark}
+  .addrow .abtn2{font:inherit; font-weight:600; font-size:14px; padding:10px 18px; border-radius:999px; border:none; background:#fff; color:#13101f}
+  .tlist{margin-top:14px; max-height:50vh; overflow-y:auto}
+  .linkrow{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:10px}
+
+  .modal.wide{max-width:560px}
+  .deck{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; background:var(--glass); border:1px solid var(--line); margin-top:8px; cursor:pointer}
+  .deck:hover{border-color:var(--line2)}
+  .deck .dn{flex:1; min-width:0} .deck .dn b{display:block; font-weight:600; font-size:14.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .deck .dn small{color:var(--dim); font-size:12px}
+  .deck button{background:none; border:none; color:var(--dim); font-size:14px}
+  .fcwrap{perspective:1200px; margin:16px 0 14px}
+  .fc{position:relative; height:240px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.2,.8,.2,1); outline:none}
+  .fc.flip{transform:rotateY(180deg)}
+  .fc > div{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:30px 22px 22px; text-align:center; border-radius:22px; border:1px solid var(--line2); font-size:19px; font-weight:500; line-height:1.45; overflow-y:auto}
+  .fc .front{background:linear-gradient(135deg,rgba(109,60,255,.35),rgba(0,208,255,.18))}
+  .fc .back{background:linear-gradient(135deg,rgba(255,79,179,.28),rgba(255,184,107,.18)); transform:rotateY(180deg); font-size:16.5px; font-weight:400}
+  .fc small{position:absolute; top:12px; left:0; right:0; font-size:11px; font-weight:600; letter-spacing:.14em; color:var(--muted); text-transform:uppercase}
+  .fc:focus-visible > div{border-color:var(--accent)}
+  .fcnav{display:flex; align-items:center; gap:8px}
+  .fcnav .cnt{flex:1; text-align:center; color:var(--muted); font-size:13px}
+  .fcnav button,.qbtns button{font:inherit; font-size:13.5px; padding:9px 14px; border-radius:999px; border:1px solid var(--line2); background:transparent; color:var(--text)}
+  .fcnav button.primary,.qbtns button.primary{background:#fff; color:#13101f; border-color:#fff; font-weight:600}
+  .fcnav button:disabled{opacity:.35; cursor:default}
+  .qq{font-size:17px; font-weight:600; line-height:1.45; margin:16px 0 8px}
+  .qc{display:block; width:100%; text-align:left; font:inherit; font-size:14.5px; padding:12px 14px; margin-top:8px; border-radius:14px; border:1px solid var(--line); background:var(--glass); color:var(--text)}
+  .qc:hover:not(:disabled){border-color:var(--line2); background:var(--glass2)}
+  .qc.right{border-color:var(--ok); background:rgba(126,240,200,.15)}
+  .qc.wrong{border-color:var(--danger); background:rgba(255,138,154,.15)}
+  .qc:disabled{cursor:default}
+  .qx{font-size:13.5px; color:var(--muted); margin-top:12px; line-height:1.5; min-height:20px}
+  .qtop{display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); margin:8px 0 6px}
+  .qbtns{display:flex; gap:8px; margin-top:16px; flex-wrap:wrap}
+  .qscore{text-align:center; font-size:46px; font-weight:700; margin:18px 0 4px}
+  .star-item{padding:12px 14px; border-radius:16px; background:var(--glass); border:1px solid var(--line); margin-top:10px; font-size:14.5px; line-height:1.6}
+  .star-item .sm{display:flex; gap:6px; justify-content:space-between; align-items:center; font-size:12px; color:var(--dim); margin-bottom:6px}
+  .star-item .sm button{background:none; border:none; color:var(--dim); font:inherit; font-size:12px; padding:2px 6px; border-radius:6px}
+  .star-item .sm button:hover{color:var(--text); background:var(--glass)}
+  .star-item .sbody{max-height:220px; overflow:auto}
+  .star-item .sbody p{margin:0 0 8px}
+  .actions{flex-wrap:wrap}
+  .actions button.on{color:var(--peach)}
+  .themes{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
+  .themes button{font:inherit; font-size:14px; padding:12px; border-radius:16px; border:2px solid var(--line); background:var(--glass); color:var(--text); text-align:left}
+  .themes button.on{border-color:var(--accent)}
+  .themes i{display:block; height:34px; border-radius:10px; margin-bottom:8px}
+  .kbd{display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-top:1px solid var(--line); font-size:14px}
+  .kbd kbd{font-family:inherit; font-size:12px; padding:3px 8px; border-radius:6px; border:1px solid var(--line2); background:var(--glass)}
+  .toast{position:fixed; left:50%; bottom:110px; transform:translateX(-50%); z-index:85; padding:10px 18px; border-radius:999px; background:rgba(26,21,42,.95); border:1px solid var(--line2);
+    color:var(--text); font-size:14px; box-shadow:0 18px 50px rgba(0,0,0,.5); animation:tin .3s ease-out; max-width:calc(100vw - 32px); text-align:center}
+  .photochip{display:flex; align-items:center; gap:10px; margin:0 auto 10px; width:max-content; max-width:100%; font-size:13px; padding:6px 8px 6px 6px; border-radius:16px;
+    background:rgba(198,168,255,.12); border:1px solid rgba(198,168,255,.4)}
+  .photochip img{width:40px; height:40px; object-fit:cover; border-radius:10px}
+  .photochip label{display:flex; align-items:center; gap:6px; cursor:pointer}
+  .photochip input{accent-color:var(--violet)}
+  .photochip button{background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:999px; width:26px; height:26px}
+  .tutorchip{display:flex; align-items:center; justify-content:center; gap:8px; margin:0 auto 10px; width:max-content; max-width:100%; font-size:13px; padding:6px 8px 6px 14px; border-radius:999px;
+    background:rgba(126,240,200,.1); border:1px solid rgba(126,240,200,.4); color:#c9ffe9}
+  .tutorchip button{background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:999px; padding:4px 12px; font-size:12.5px}
+  @media (max-width:520px){ #shareBtn{display:none!important} #camBtn{width:40px; height:40px} .box{gap:6px; padding-left:16px} }
+
+  /* Themes */
+  :root[data-theme="ocean"]{--violet:#1b5cff; --pink:#00b7c7; --cyan:#41f0d0; --peach:#8fd3ff; --accent:#8fd3ff; --bg:#03080f}
+  :root[data-theme="sunset"]{--violet:#ff5a3c; --pink:#ff2f8a; --cyan:#ffc04d; --peach:#ffd29a; --accent:#ffb48a; --bg:#0f0607}
+  :root[data-theme="forest"]{--violet:#1f8f5a; --pink:#9bd34a; --cyan:#2fd6a0; --peach:#e8e27a; --accent:#a8e6a0; --bg:#040a07}
+  :root[data-theme="light"]{--bg:#f6f3ff; --text:#1d1838; --muted:#5f5880; --dim:#8a84a6; --glass:rgba(40,20,90,.05); --glass2:rgba(40,20,90,.09);
+    --line:rgba(40,20,90,.13); --line2:rgba(40,20,90,.22); --accent:#6d3cff; --ok:#14996b; --danger:#d63a55; --peach:#c46a00}
+  :root[data-theme="light"] .blob{opacity:.28}
+  :root[data-theme="light"] :is(.navL,.navR,.wx,.today,.box,.drawer,.modal,.amenu,.pop,.tourTip,.toast){background:rgba(255,255,255,.8); color:var(--text)}
+  :root[data-theme="light"] :is(.navic,.chip,.mi,.navbtn,.ic,.tools button,.hitem,.actions button:hover){color:var(--text)}
+  :root[data-theme="light"] .topfade{background:linear-gradient(rgba(246,243,255,.9),transparent)}
+  :root[data-theme="light"] .dock{background:linear-gradient(transparent, rgba(246,243,255,.9) 45%)}
+  :root[data-theme="light"] .hero .sub{color:var(--muted)}
+  :root[data-theme="light"] .grad{background-image:linear-gradient(90deg,#0089b3,#6d3cff,#d62f8c)}
+  :root[data-theme="light"] :is(.bubble strong,.card .row b){color:var(--text)}
+  :root[data-theme="light"] .msg.user .bubble{color:#fff}
+  :root[data-theme="light"] .msg.user .bubble strong{color:#fff}
+  :root[data-theme="light"] .bubble pre{background:rgba(40,20,90,.06)}
+  :root[data-theme="light"] :is(.acct,.send,.bigbtn:not(.ghosty),.card .btns .primary,.tmode button.on,.tbtns .primary,.fcnav button.primary,.qbtns button.primary,.addrow .abtn2){background:#1d1838; color:#fff; border-color:#1d1838}
+  :root[data-theme="light"] .card .btns :is(a,button):not(.primary){color:var(--text)}
+  :root[data-theme="light"] :is(.photochip button,.tutorchip button,.sharechip button){background:rgba(40,20,90,.1); color:var(--text)}
+  :root[data-theme="light"] .tutorchip{color:#0b6b4a}
+  :root[data-theme="light"] .sharechip{color:#05617a}
+  :root[data-theme="light"] .overlay{background:rgba(40,30,80,.25)}
+  :root[data-theme="light"] :is(.modal input,.modal textarea,.modal select){color-scheme:light}
+  :root[data-theme="light"] .fc > div{color:var(--text)}
+  :root[data-theme="light"] .x{color:var(--muted)}
+
+  /* Printing / save as PDF: only the conversation */
+  .print-head{display:none}
+  @media print{
+    html,body{height:auto; overflow:visible; background:#fff; color:#000}
+    .aurora,.navL,.navR,.dock,.topfade,.hero,.amenu,.pop,.overlay,.drawer,.scrim,.announce,.toast,.actions,.avatar,.voice,.adminp,.tour,.today{display:none!important}
+    main{height:auto; overflow:visible}
+    .wrap{padding:0; max-width:none}
+    .msg{animation:none}
+    .msg.user .bubble{background:#eee!important; color:#000; border:1px solid #ccc; backdrop-filter:none}
+    .bubble,.bubble strong,.card .row b{color:#000!important}
+    .card{background:#fafafa; color:#000; backdrop-filter:none}
+    .print-head{display:block!important; font-size:18px; font-weight:700; margin-bottom:12px}
+  }
 </style>
 </head>
 <body>
@@ -372,7 +529,8 @@
   <div class="brand"><span class="mini"></span>QUORVYN<span class="brandsub">Study and Assistant</span><span class="dot off" id="status"></span></div>
 </nav>
 <nav class="navR">
-  <time class="clock" id="clock" aria-label="Current time"></time>
+  <button class="clock" id="clock" type="button" title="Focus timer" aria-label="Current time. Open focus timer"></button>
+  <button class="navic" id="toolsBtn" title="Study tools" aria-label="Study tools" aria-expanded="false">🧰</button>
   <button class="navic" id="helpBtn" title="Help and tour" aria-label="Help and tour">?</button>
   <button class="navic" id="newBtn" title="New chat" aria-label="New chat">＋</button>
   <button class="navic" id="voiceBtn" aria-pressed="false" title="Read replies aloud" aria-label="Read replies aloud">🔊</button>
@@ -389,22 +547,53 @@
   <button class="mi" id="mSignOut" type="button">↪ Sign out</button>
 </div>
 
+<div class="amenu" id="toolsMenu" hidden>
+  <div class="mhead">Study tools<small>Flashcards, quizzes, tasks and more</small></div>
+  <div class="msep"></div>
+  <button class="mi" data-tool="cards" type="button">🃏 Flashcards</button>
+  <button class="mi" data-tool="quiz" type="button">🧠 Quiz me</button>
+  <button class="mi" data-tool="tasks" type="button">✅ To-do list</button>
+  <button class="mi" data-tool="timer" type="button">⏱ Focus timer</button>
+  <button class="mi" data-tool="tutor" type="button">🧑‍🏫 Hints, not answers <span class="mcheck" id="tutorChk"></span></button>
+  <button class="mi" data-tool="stars" type="button">⭐ Starred messages</button>
+  <button class="mi" data-tool="export" type="button">⬇ Export this chat</button>
+  <div class="msep"></div>
+  <button class="mi" data-tool="theme" type="button">🎨 Theme</button>
+  <button class="mi" data-tool="keys" type="button">⌨ Keyboard shortcuts</button>
+  <button class="mi" data-tool="help" type="button">❓ Help &amp; tour</button>
+</div>
+<div class="pop" id="timerPop" hidden role="dialog" aria-label="Focus timer">
+  <div class="tmode"><button type="button" data-preset="25,5" class="on">25 / 5</button><button type="button" data-preset="50,10">50 / 10</button><button type="button" data-preset="15,3">15 / 3</button></div>
+  <div class="tbig" id="tBig">25:00</div>
+  <div class="tlabel" id="tLabel">Focus time</div>
+  <div class="tbar"><i id="tBar"></i></div>
+  <div class="tbtns" style="margin-top:14px"><button type="button" class="primary" id="tStart">Start</button><button type="button" id="tReset">Reset</button><button type="button" id="tSkip">Skip</button></div>
+  <div class="tnote" id="tNote">Work for 25 minutes, then take a 5 minute break. A chime plays when time is up.</div>
+</div>
+
 <main id="scroller">
   <div class="wrap" id="wrap">
     <section class="hero" id="hero">
       <button class="wx" id="wx" type="button" aria-label="Weather. Tap to change location"></button>
+      <div class="today" id="today" aria-label="Today"></div>
       <div class="orb" id="orb"></div>
       <h1><span id="greet">Good evening.</span><br>What's on your mind?</h1>
       <p class="sub">Ask anything — plan, write, schedule, or explain.</p>
       <div id="heroSlot">
         <div class="composer" id="composer">
           <div class="pausenote" id="pauseNote" hidden></div>
+          <div class="photochip" id="photoChip" hidden><img id="photoPrev" alt="Attached photo"><label><input type="checkbox" id="photoHints" checked> Hints, not answers</label><button type="button" id="photoX" aria-label="Remove photo">×</button></div>
+          <div class="tutorchip" id="tutorChip" hidden>🧑‍🏫 Hints mode: Quorvyn guides you step by step <button type="button" id="tutorOff">Turn off</button></div>
           <div class="sharechip" id="shareChip" hidden><span class="live"></span>Quorvyn can see your screen <button id="shareStop" type="button">Stop</button></div>
           <form class="box" id="form">
             <textarea id="input" rows="1" placeholder="Message Quorvyn…" autocomplete="off"></textarea>
             <button class="ic" id="micBtn" type="button" title="Talk to Quorvyn" hidden>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
             </button>
+            <button class="ic" id="camBtn" type="button" title="Add a photo of your homework" aria-label="Add a photo of your homework">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            </button>
+            <input type="file" id="camInput" accept="image/*" hidden>
             <button class="ic" id="shareBtn" type="button" title="Show Quorvyn your screen" aria-label="Show Quorvyn your screen" hidden>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
             </button>
@@ -422,7 +611,16 @@
         <button class="chip" data-q="Add study group next Tuesday at 4pm to my calendar"><i style="background:rgba(255,79,179,.22)">⏰</i>Add study group Tuesday 4pm</button>
         <button class="chip" data-q="Explain how black holes form, simply"><i style="background:rgba(255,184,107,.22)">✨</i>Explain black holes simply</button>
       </div>
+      <div class="tools" id="homeTools">
+        <button type="button" data-tool="cards">🃏 Flashcards</button>
+        <button type="button" data-tool="quiz">🧠 Quiz me</button>
+        <button type="button" data-tool="tasks">✅ To-do list</button>
+        <button type="button" data-tool="timer">⏱ Focus timer</button>
+        <button type="button" data-tool="stars">⭐ Starred</button>
+        <button type="button" data-tool="theme">🎨 Theme</button>
+      </div>
     </section>
+    <div class="print-head" id="printHead">Quorvyn chat</div>
     <div id="log"></div>
   </div>
 </main>
@@ -525,9 +723,142 @@
     <div class="hsec"><b>✉️ Emails and 📅 calendar events</b><p>Say "email my coach that I'll be late" or "add study group Tuesday at 4pm." Quorvyn makes a card with buttons like <i>Open in Gmail</i> or <i>Add to Google Calendar</i>. It opens ready to go, and you hit Send or Save yourself.</p></div>
     <div class="hsec"><b>👤 Your account</b><p>Tap <i>Sign in</i> (Google or email) to save your chats and pick a unique @username, a name and a profile picture. In your profile, fill in <i>What should Quorvyn remember about you?</i> and it will use that in every chat. Signing in is optional.</p></div>
     <div class="hsec"><b>☰ Saved chats</b><p>When you're signed in, tap ☰ (top left) to reopen past chats. Tap 🗑 twice to delete one. Tap ＋ (top right) to start a new chat.</p></div>
+    <div class="hsec"><b>🧰 Study tools</b><p>Tap 🧰 (top right) or the buttons on the home screen. <i>🃏 Flashcards</i> and <i>🧠 Quiz me</i> turn any topic (or any reply, using the buttons under it) into a deck or a 5-question quiz. <i>✅ To-do list</i> keeps your tasks and reminds you when they're due. <i>⭐ Star</i> a reply to keep it, and <i>⬇ Export</i> a chat as a PDF or text file.</p></div>
+    <div class="hsec"><b>📷 Homework help</b><p>Tap the camera button in the message bar to add a photo of a problem. With <i>Hints, not answers</i> on, Quorvyn walks you through it step by step instead of just giving the answer. You can turn hints mode on for every chat from the 🧰 menu.</p></div>
+    <div class="hsec"><b>⏱ Focus timer and 🔥 streaks</b><p>Tap the clock (top right) to start a focus timer (25 minutes of work, then a 5 minute break). The <i>Today</i> card shows your study streak, focus sessions and what's due.</p></div>
+    <div class="hsec"><b>🎨 Themes and ⌨ shortcuts</b><p>Pick Aurora, Ocean, Sunset, Forest or Light from <i>🎨 Theme</i>. Press <i>Ctrl + K</i> for a new chat, <i>/</i> to jump to the message box, and <i>Ctrl + /</i> to see all shortcuts.</p></div>
     <div class="hsec"><b>🔊 Read replies aloud</b><p>Turn it on from your name menu (or the 🔊 button if you're not signed in) and every reply is read out loud.</p></div>
     <div class="hsec admin-only" hidden><b>🛡 Admin (only you see this)</b><p>Open <i>Admin</i> from your name menu to see stats, post an announcement, pause Quorvyn, ban or unban accounts, and give or take back OG badges.</p></div>
     <div class="hsec"><b>🔒 Privacy</b><p>Messages, screenshots and voice replies are processed by Google's free Gemini service, which may use them to improve its products, so don't share passwords or private info. Your saved chats are only visible to you.</p></div>
+  </div>
+</div>
+
+
+<div class="overlay" id="tasksModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <h2>✅ To-do list</h2>
+    <p class="sub">Add things you need to do. Give them a due time to get a reminder while Quorvyn is open. You can also say "add finish essay Friday" in chat.</p>
+    <form class="addrow" id="taskForm">
+      <input type="text" id="taskText" maxlength="140" placeholder="Finish history essay" autocomplete="off" required>
+      <input type="datetime-local" id="taskDue" aria-label="Due date and time (optional)">
+      <button class="abtn2" type="submit">Add</button>
+    </form>
+    <div class="tlist" id="taskList"></div>
+    <div class="linkrow"><span class="uhint" id="taskHint"></span><button class="linkish" id="clearDone" type="button">Clear finished</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="cardsModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <div id="cardsHome">
+      <h2>🃏 Flashcards</h2>
+      <p class="sub">Type a topic or paste your notes, and Quorvyn makes a deck. You can also tap <b>🃏 Flashcards</b> under any reply.</p>
+      <form id="cardsForm">
+        <textarea id="cardsTopic" maxlength="3000" rows="3" placeholder="e.g. The water cycle, or paste your class notes" style="min-height:70px"></textarea>
+        <button class="bigbtn" type="submit" id="cardsGo">Make flashcards</button>
+      </form>
+      <div class="msgline" id="cardsMsg"></div>
+      <label>Your decks</label>
+      <div id="deckList"></div>
+    </div>
+    <div id="cardsStudy" hidden>
+      <button class="linkish" id="cardsBack" type="button">← All decks</button>
+      <h2 id="deckTitle" style="margin-top:8px"></h2>
+      <div class="fcwrap"><div class="fc" id="fc" tabindex="0" role="button" aria-label="Flip card"><div class="front"><small>Question · tap to flip</small><span id="fcFront"></span></div><div class="back"><small>Answer</small><span id="fcBack"></span></div></div></div>
+      <div class="fcnav">
+        <button type="button" id="fcPrev">← Back</button>
+        <span class="cnt" id="fcCount"></span>
+        <button type="button" id="fcNext" class="primary">Next →</button>
+      </div>
+      <div class="qbtns" style="justify-content:center"><button type="button" id="fcShuffle">🔀 Shuffle</button><button type="button" id="fcQuiz">🧠 Quiz me on this</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="quizModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <div id="quizHome">
+      <h2>🧠 Quiz me</h2>
+      <p class="sub">Pick a topic and Quorvyn asks you 5 multiple-choice questions, then scores you. You can also tap <b>🧠 Quiz me</b> under any reply.</p>
+      <form id="quizForm">
+        <textarea id="quizTopic" maxlength="3000" rows="3" placeholder="e.g. World War I causes, or 8th grade algebra" style="min-height:70px"></textarea>
+        <div class="tmode" style="margin-top:10px" id="quizLevel"><button type="button" data-lv="easy">Easy</button><button type="button" data-lv="medium" class="on">Medium</button><button type="button" data-lv="hard">Hard</button></div>
+        <button class="bigbtn" type="submit" id="quizGo">Start quiz</button>
+      </form>
+      <div class="msgline" id="quizMsg"></div>
+      <div class="uhint" id="quizBest"></div>
+    </div>
+    <div id="quizPlay" hidden>
+      <h2 id="quizTitle"></h2>
+      <div class="qtop"><span id="quizNum"></span><span id="quizScore"></span></div>
+      <div class="tbar"><i id="quizBar"></i></div>
+      <div class="qq" id="quizQ"></div>
+      <div id="quizChoices"></div>
+      <div class="qx" id="quizX"></div>
+      <div class="qbtns"><button type="button" class="primary" id="quizNext" hidden>Next →</button></div>
+    </div>
+    <div id="quizDone" hidden style="text-align:center">
+      <h2>Quiz finished!</h2>
+      <div class="qscore" id="quizFinal"></div>
+      <p class="sub" id="quizMsg2"></p>
+      <div class="qbtns" style="justify-content:center"><button type="button" class="primary" id="quizAgain">Try again</button><button type="button" id="quizNew">New topic</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="starsModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <h2>⭐ Starred messages</h2>
+    <p class="sub">Tap ☆ Star under any reply to save it here.</p>
+    <div id="starList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="exportModal">
+  <div class="modal">
+    <button class="x" data-close>×</button>
+    <h2>⬇ Export this chat</h2>
+    <p class="sub">Save the conversation you have open right now.</p>
+    <button class="bigbtn" id="exPdf" type="button">🖨 Print or save as PDF</button>
+    <button class="bigbtn ghosty" id="exTxt" type="button">📄 Download as text (.txt)</button>
+    <button class="bigbtn ghosty" id="exMd" type="button">📝 Download as Markdown (.md)</button>
+    <button class="bigbtn ghosty" id="exCopy" type="button">📋 Copy whole chat</button>
+    <div class="msgline" id="exMsg"></div>
+  </div>
+</div>
+
+<div class="overlay" id="themeModal">
+  <div class="modal">
+    <button class="x" data-close>×</button>
+    <h2>🎨 Theme</h2>
+    <p class="sub">Pick a look. It's saved on this device.</p>
+    <div class="themes" id="themeList">
+      <button type="button" data-theme=""><i style="background:linear-gradient(90deg,#6d3cff,#ff4fb3,#00d0ff)"></i>Aurora</button>
+      <button type="button" data-theme="ocean"><i style="background:linear-gradient(90deg,#1b5cff,#00b7c7,#41f0d0)"></i>Ocean</button>
+      <button type="button" data-theme="sunset"><i style="background:linear-gradient(90deg,#ff5a3c,#ff2f8a,#ffc04d)"></i>Sunset</button>
+      <button type="button" data-theme="forest"><i style="background:linear-gradient(90deg,#1f8f5a,#9bd34a,#2fd6a0)"></i>Forest</button>
+      <button type="button" data-theme="light"><i style="background:linear-gradient(90deg,#f6f3ff,#d9ccff,#ffd1ea); border:1px solid rgba(0,0,0,.1)"></i>Light</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="keysModal">
+  <div class="modal">
+    <button class="x" data-close>×</button>
+    <h2>⌨ Keyboard shortcuts</h2>
+    <p class="sub">On a Mac, use ⌘ instead of Ctrl.</p>
+    <div class="kbd"><span>New chat</span><kbd>Ctrl + K</kbd></div>
+    <div class="kbd"><span>Jump to the message box</span><kbd>/</kbd></div>
+    <div class="kbd"><span>Send message</span><kbd>Enter</kbd></div>
+    <div class="kbd"><span>New line</span><kbd>Shift + Enter</kbd></div>
+    <div class="kbd"><span>Focus timer</span><kbd>Alt + T</kbd></div>
+    <div class="kbd"><span>Study tools menu</span><kbd>Alt + S</kbd></div>
+    <div class="kbd"><span>Show this list</span><kbd>Ctrl + /</kbd></div>
+    <div class="kbd"><span>Close a window</span><kbd>Esc</kbd></div>
   </div>
 </div>
 
@@ -630,7 +961,7 @@
   }
 
   // ---------- Email & calendar action cards ----------
-  const ACTION_RE = /```(email|event)\s*\n?([\s\S]*?)```/g;
+  const ACTION_RE = /```(email|event|task|flashcards|quiz)\s*\n?([\s\S]*?)```/g;
   function el(tag, attrs, text){
     const e = document.createElement(tag);
     for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
@@ -732,7 +1063,7 @@
     const rest = text.replace(ACTION_RE, (m, kind, raw) => {
       try {
         const data = JSON.parse(raw.trim());
-        cards.push(kind === "email" ? emailCard(data) : eventCard(data));
+        cards.push(kind === "email" ? emailCard(data) : kind === "event" ? eventCard(data) : studyCard(kind, data));
         return `\n\n%%CARD${cards.length - 1}%%\n\n`;
       } catch { return m; }
     });
@@ -817,7 +1148,7 @@
     updateSend();
   }
   function updateSend(){
-    send.disabled = !busy && !input.value.trim();
+    send.disabled = !busy && !input.value.trim() && !hasPhoto();
     const tb = $("talkBtn"); if (tb) tb.classList.toggle("gone", !!input.value.trim() || busy);
   }
   function autosize(){ input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 180) + "px"; }
@@ -831,10 +1162,12 @@
   async function ask(text, opts){
     if (busy) return null;
     if (siteCfg.paused) { showPaused(); return null; }
-    const shot = grabFrame();
+    const photo = takePhoto();
+    const shot = photo ? photo.data : grabFrame();
+    const tutor = photo ? photo.tutor : tutorOn;
     const ub = addMsg("user", text);
     if (shot) { const im = document.createElement("img"); im.src = shot; im.className = "shot"; im.alt = "Screenshot shared with Quorvyn"; ub.append(im); }
-    trackUsage();
+    trackUsage(); markStudied();
     history.push({ role: "user", content: text });
     const bubble = addMsg("ai", '<span class="thinking-txt">Thinking…</span>');
     setBusy(true);
@@ -850,6 +1183,9 @@
           voice: !!(opts && opts.voice),
           weather: wxForAI(),
           image: shot ? shot.split(",")[1] : undefined,
+          photo: !!photo,
+          tutor: !!tutor,
+          tasks: tasksForAI(),
           now: new Date().toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }),
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
         })
@@ -892,6 +1228,7 @@
     say.textContent = "Read aloud";
     say.onclick = () => { const was = voiceOn; voiceOn = true; speak(text); voiceOn = was; };
     row.append(copy, say);
+    studyActions(row, text);
     bubble.appendChild(row);
   }
 
@@ -963,6 +1300,7 @@
         if (!user) return;
         syncStats();
         loadHistory();
+        studyLogin();
         notifyNewAccount();
         if (isAdmin) checkNewAccounts();
         if (ogPending) { ogPending = false; doClaimFlow(); }
@@ -1181,7 +1519,7 @@
     const { collection, query, orderBy, limit, getDocs } = fb.F;
     try {
       const snap = await getDocs(query(collection(fb.db, "users", user.uid, "chats"), orderBy("updatedAt", "desc"), limit(50)));
-      chatsCache = snap.docs.map(d => ({ id: d.id, title: d.data().title || "Untitled chat" }));
+      chatsCache = snap.docs.filter(d => d.id !== STUDY_DOC).map(d => ({ id: d.id, title: d.data().title || "Untitled chat" }));
     } catch (e) { console.error(e); chatsCache = []; }
     drawList();
   }
@@ -1907,9 +2245,9 @@
   form.addEventListener("submit", e => {
     e.preventDefault();
     if (busy) { controller && controller.abort(); return; }
-    const t = input.value.trim(); if (!t) return;
+    const t = input.value.trim(); if (!t && !hasPhoto()) return;
     input.value = ""; autosize(); updateSend();
-    ask(t);
+    ask(t || "Can you help me with this?");
   });
   input.addEventListener("input", () => { autosize(); updateSend(); });
   input.addEventListener("keydown", e => {
@@ -2070,18 +2408,643 @@
     };
   })();
 
+
+  // =====================================================================
+  // ---------- Study tools: tasks, flashcards, quizzes, stars, timer ----------
+  // =====================================================================
+  const STUDY_KEY = "qv-study";
+  const blankStudy = () => ({ tasks: [], decks: [], stars: [], days: [], focus: {}, quizzes: [], updated: 0 });
+  let study = blankStudy();
+  try { study = Object.assign(blankStudy(), JSON.parse(localStorage.getItem(STUDY_KEY) || "{}")); } catch {}
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const pad2 = n => String(n).padStart(2, "0");
+  const ymd = (d = new Date()) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+  const STUDY_DOC = "zz_study";       // stored with your saved chats, hidden from the chat list
+  let cloudTimer = null;
+
+  function saveStudy(){
+    study.updated = Date.now();
+    try { localStorage.setItem(STUDY_KEY, JSON.stringify(study)); } catch {}
+    clearTimeout(cloudTimer);
+    cloudTimer = setTimeout(cloudSave, 1200);
+  }
+  async function cloudSave(){
+    if (!user || !fb) return;
+    try { await fb.F.setDoc(fb.F.doc(fb.db, "users", user.uid, "chats", STUDY_DOC), { study: JSON.stringify(study) }); }
+    catch (e) { console.warn("Couldn't sync study tools", e); }
+  }
+  async function studyLogin(){
+    if (!user || !fb) return;
+    try {
+      const snap = await fb.F.getDoc(fb.F.doc(fb.db, "users", user.uid, "chats", STUDY_DOC));
+      const cloud = snap.exists() ? Object.assign(blankStudy(), JSON.parse(snap.data().study || "{}")) : null;
+      if (cloud && cloud.updated > study.updated) {
+        study = cloud;
+        try { localStorage.setItem(STUDY_KEY, JSON.stringify(study)); } catch {}
+        renderAllStudy();
+      } else if (study.updated) cloudSave();
+    } catch (e) { console.warn("Couldn't load study tools", e); }
+  }
+  function renderAllStudy(){ renderToday(); renderTasks(); renderDecks(); renderStars(); }
+
+  // ---------- Small helpers ----------
+  function toast(text, ms){
+    document.querySelectorAll(".toast").forEach(t => t.remove());
+    const t = el("div", { class: "toast", role: "status" }, text);
+    document.body.append(t);
+    setTimeout(() => t.remove(), ms || 3800);
+  }
+  let actx = null;
+  function unlockChime(){ try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); } catch {} }
+  function chime(){
+    try {
+      unlockChime(); if (!actx) return;
+      [660, 880, 1320].forEach((f, i) => {
+        const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + i * 0.18;
+        o.type = "sine"; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.6);
+        o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + 0.65);
+      });
+    } catch {}
+  }
+  function alertUser(title, body){
+    chime(); toast(title + (body ? " " + body : ""), 6000);
+    try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(title, { body: body || "" }); } catch {}
+  }
+  function askNotify(){ try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch {} }
+  function stripBlocks(t){ return String(t || "").replace(/```(email|event|task|flashcards|quiz)[\s\S]*?```/g, "").trim(); }
+  function looseJSON(text){
+    const m = String(text).match(/```[a-z]*\s*\n?([\s\S]*?)```/i);
+    const src = m ? m[1] : String(text);
+    try { return JSON.parse(src.trim()); } catch {}
+    const a = src.indexOf("{"), b = src.lastIndexOf("}");
+    if (a >= 0 && b > a) { try { return JSON.parse(src.slice(a, b + 1).replace(/,\s*([}\]])/g, "$1")); } catch {} }
+    return null;
+  }
+  // Ask Quorvyn for a deck or quiz behind the scenes (not shown in the chat)
+  async function gen(kind, prompt){
+    if (siteCfg.paused) throw new Error(siteCfg.pauseMsg || "Quorvyn is taking a quick break. Back soon!");
+    trackUsage();
+    const res = await fetch("/api/chat", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [{ role: "user", content: prompt.slice(0, 3900) }], gen: kind,
+        now: new Date().toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+    const out = looseJSON(data.text || "");
+    if (!out) throw new Error("Quorvyn's answer came back in a strange shape. Please try again.");
+    return out;
+  }
+  function cleanDeck(d){
+    const cards = (Array.isArray(d && d.cards) ? d.cards : [])
+      .map(c => ({ q: String((c && (c.q || c.front || c.question)) || "").trim().slice(0, 400), a: String((c && (c.a || c.back || c.answer)) || "").trim().slice(0, 800) }))
+      .filter(c => c.q && c.a).slice(0, 40);
+    return cards.length ? { title: String((d && d.title) || "Flashcards").slice(0, 80), cards } : null;
+  }
+  function cleanQuiz(d){
+    const questions = (Array.isArray(d && d.questions) ? d.questions : []).map(q => {
+      const choices = (Array.isArray(q && q.choices) ? q.choices : []).map(c => String(c).slice(0, 300)).filter(Boolean).slice(0, 6);
+      const answer = Number(q && q.answer);
+      return { q: String((q && q.q) || "").slice(0, 500), choices, answer, explain: String((q && q.explain) || "").slice(0, 600) };
+    }).filter(q => q.q && q.choices.length >= 2 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < q.choices.length).slice(0, 10);
+    return questions.length ? { title: String((d && d.title) || "Quiz").slice(0, 80), questions } : null;
+  }
+
+  // ---------- Streaks ----------
+  function streak(){
+    const set = new Set(study.days); const d = new Date();
+    if (!set.has(ymd(d))) d.setDate(d.getDate() - 1);
+    let n = 0; while (set.has(ymd(d))) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function markStudied(){
+    const t = ymd();
+    if (study.days.includes(t)) return;
+    study.days = [...study.days, t].slice(-400);
+    saveStudy(); renderToday();
+    const n = streak();
+    if (n >= 2) setTimeout(() => toast(`🔥 ${n}-day streak! Keep it going.`), 600);
+  }
+
+  // ---------- To-do list ----------
+  function dueDate(t){ if (!t.due) return null; const d = new Date(/T/.test(t.due) ? t.due : t.due + "T23:59"); return isNaN(d) ? null : d; }
+  function dueText(t){
+    const d = dueDate(t); if (!d) return { text: "", cls: "" };
+    const now = new Date(), hasTime = /T/.test(t.due);
+    const time = hasTime ? " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : "";
+    const dayDiff = Math.round((new Date(ymd(d) + "T12:00") - new Date(ymd(now) + "T12:00")) / 864e5);
+    let txt = dayDiff === 0 ? "Today" + time : dayDiff === 1 ? "Tomorrow" + time : dayDiff === -1 ? "Yesterday" + time
+      : d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }) + time;
+    if (t.done) return { text: txt, cls: "" };
+    if (d < now) return { text: "Overdue · " + txt, cls: "late" };
+    return { text: "Due " + txt, cls: dayDiff <= 1 ? "soon" : "" };
+  }
+  function sortedTasks(){
+    return [...study.tasks].sort((a, b) => (a.done - b.done) || ((dueDate(a) || 8e15) - (dueDate(b) || 8e15)) || (a.created - b.created));
+  }
+  function addTask(text, due){
+    text = String(text || "").trim().slice(0, 140); if (!text) return null;
+    due = String(due || "").trim().slice(0, 16);
+    if (due && isNaN(new Date(/T/.test(due) ? due : due + "T12:00"))) due = "";
+    const t = { id: uid(), text, due, done: false, notified: false, created: Date.now() };
+    study.tasks.push(t); saveStudy(); renderTasks(); renderToday();
+    if (/T/.test(due)) askNotify();
+    return t;
+  }
+  function taskRow(t, compact){
+    const row = el("div", { class: "task" + (t.done ? " done" : "") });
+    const cb = el("input", { type: "checkbox", "aria-label": "Done" }); cb.checked = t.done;
+    cb.onchange = () => {
+      t.done = cb.checked; saveStudy(); renderTasks(); renderToday();
+      if (t.done) { toast("✅ Nice work!"); markStudied(); }
+    };
+    const tt = el("div", { class: "tt" }, t.text);
+    const dt = dueText(t); if (dt.text) tt.append(el("span", { class: "tdue " + dt.cls }, dt.text));
+    row.append(cb, tt);
+    if (!compact) {
+      const del = el("button", { class: "tdel", type: "button", title: "Delete", "aria-label": "Delete task" }, "×");
+      del.onclick = () => { study.tasks = study.tasks.filter(x => x.id !== t.id); saveStudy(); renderTasks(); renderToday(); };
+      row.append(del);
+    }
+    return row;
+  }
+  function renderTasks(){
+    const list = $("taskList"); if (!list) return;
+    list.innerHTML = "";
+    const all = sortedTasks();
+    if (!all.length) list.append(el("div", { class: "empty" }, "Nothing here yet. Add your first task above."));
+    all.forEach(t => list.append(taskRow(t)));
+    $("clearDone").hidden = !all.some(t => t.done);
+    $("taskHint").textContent = user ? "Synced with your account." : "Saved on this device. Sign in to keep it everywhere.";
+  }
+  function openTasks(){ renderTasks(); openModal("tasksModal"); setTimeout(() => $("taskText").focus(), 50); }
+  $("taskForm").addEventListener("submit", e => {
+    e.preventDefault();
+    if (addTask($("taskText").value, $("taskDue").value)) { $("taskText").value = ""; $("taskDue").value = ""; $("taskText").focus(); }
+  });
+  $("clearDone").onclick = () => { study.tasks = study.tasks.filter(t => !t.done); saveStudy(); renderTasks(); renderToday(); };
+  // Reminders while the page is open
+  function checkReminders(){
+    const now = Date.now(); let changed = false;
+    for (const t of study.tasks) {
+      if (t.done || t.notified || !/T/.test(t.due)) continue;
+      const d = dueDate(t); if (!d || d > now) continue;
+      t.notified = true; changed = true;
+      if (now - d < 3600e3) alertUser("⏰ Reminder: " + t.text, "is due now.");
+    }
+    if (changed) { saveStudy(); renderTasks(); }
+    renderToday();
+  }
+  setInterval(checkReminders, 20000);
+  function tasksForAI(){
+    const open = sortedTasks().filter(t => !t.done).slice(0, 15);
+    return open.map(t => t.text + (t.due ? ` (due ${t.due})` : "")).join("; ").slice(0, 1200);
+  }
+
+  // ---------- Today card ----------
+  const LINES = [
+    "Small steps every day add up to big results.", "Start with the hardest thing. Everything after feels easier.",
+    "You don't have to be perfect, just a little better than yesterday.", "Focus on progress, not perfection.",
+    "Twenty-five focused minutes beat two distracted hours.", "Done is better than perfect. Then make it better.",
+    "Your future self is cheering you on.", "Confusion is just learning that hasn't clicked yet.",
+    "Take a breath. One thing at a time.", "Ask the question. That's how smart people get smarter.",
+    "A short break is part of the work, not a pause from it.", "Consistency beats intensity.",
+    "Mistakes are proof you're trying.", "Write it down so your brain can stop holding it.",
+    "Today's effort is tomorrow's confidence.", "You've handled hard days before. You've got this one too.",
+    "Explain it simply and you'll really know it.", "Hydrate, stretch, then get back to it.",
+    "Big goals are just small tasks in a trench coat.", "Every expert was once a beginner."
+  ];
+  function renderToday(){
+    const box = $("today"); if (!box) return;
+    const now = new Date(), today = ymd(now);
+    const n = streak(), focus = study.focus[today] || 0;
+    const due = sortedTasks().filter(t => !t.done && dueDate(t) && ymd(dueDate(t)) <= today);
+    const open = study.tasks.filter(t => !t.done).length;
+    box.innerHTML = "";
+    box.append(el("div", { class: "tdh" }, "Today"),
+      el("div", { class: "tdd" }, now.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })));
+    const stats = el("div", { class: "tds" });
+    stats.append(el("span", null, n ? `🔥 ${n}-day streak` : "🔥 Start a streak"));
+    if (focus) stats.append(el("span", null, `⏱ ${focus} focus`));
+    box.append(stats);
+    const l = el("div", { class: "tdl" });
+    if (due.length) due.slice(0, 3).forEach(t => l.append(taskRow(t, true)));
+    else l.append(el("div", { class: "tdnone" }, open ? "Nothing due today 🎉" : "No tasks yet."));
+    box.append(l);
+    const more = el("button", { class: "tdmore", type: "button" }, open ? `All tasks (${open}) →` : "+ Add a task");
+    more.onclick = openTasks; box.append(more);
+    const di = Math.floor(new Date(today + "T12:00") / 864e5);
+    box.append(el("div", { class: "tdq" }, LINES[di % LINES.length]));
+    const sum = el("div", { class: "tdsum" });
+    sum.innerHTML = `${n ? `🔥 <b>${n}-day streak</b>` : "🔥 Start a streak"} · ${due.length ? `<b>${due.length}</b> due today` : "nothing due today"} · tap for tasks`;
+    box.append(sum);
+  }
+  $("today").addEventListener("click", e => {
+    if (matchMedia("(max-width:1180px)").matches && !e.target.closest("input,button")) openTasks();
+  });
+
+  // ---------- Flashcards ----------
+  let deck = null, fcI = 0;
+  function renderDecks(){
+    const list = $("deckList"); if (!list) return;
+    list.innerHTML = "";
+    if (!study.decks.length) { list.append(el("div", { class: "empty" }, "No decks yet.")); return; }
+    [...study.decks].sort((a, b) => (b.used || b.created) - (a.used || a.created)).forEach(d => {
+      const row = el("div", { class: "deck", role: "button", tabindex: "0" });
+      const dn = el("div", { class: "dn" }); dn.append(el("b", null, d.title), el("small", null, `${d.cards.length} cards`));
+      const del = el("button", { type: "button", title: "Delete deck" }, "🗑");
+      del.onclick = ev => {
+        ev.stopPropagation();
+        if (!row.dataset.confirm) { row.dataset.confirm = "1"; del.textContent = "Delete?"; setTimeout(() => { row.dataset.confirm = ""; del.textContent = "🗑"; }, 2500); return; }
+        study.decks = study.decks.filter(x => x.id !== d.id); saveStudy(); renderDecks();
+      };
+      row.append(el("span", null, "🃏"), dn, del);
+      row.onclick = () => studyDeck(d);
+      row.onkeydown = ev => { if (ev.key === "Enter") studyDeck(d); };
+      list.append(row);
+    });
+  }
+  function saveDeck(d){
+    const same = study.decks.find(x => x.title === d.title && x.cards.length === d.cards.length && x.cards[0].q === d.cards[0].q);
+    if (same) return same;
+    const nd = { id: uid(), title: d.title, cards: d.cards, created: Date.now() };
+    study.decks.push(nd); study.decks = study.decks.slice(-60); saveStudy(); renderDecks();
+    return nd;
+  }
+  function openCards(){ $("cardsHome").hidden = false; $("cardsStudy").hidden = true; $("cardsMsg").textContent = ""; renderDecks(); openModal("cardsModal"); }
+  function studyDeck(d){
+    deck = d; fcI = 0; d.used = Date.now(); saveStudy();
+    $("cardsHome").hidden = true; $("cardsStudy").hidden = false; $("deckTitle").textContent = d.title;
+    openModal("cardsModal"); showCard(); markStudied();
+  }
+  function showCard(){
+    const c = deck.cards[fcI]; $("fc").classList.remove("flip");
+    $("fcFront").textContent = c.q;
+    setTimeout(() => { $("fcBack").textContent = c.a; }, 150);   // don't flash the answer during the flip back
+    $("fcCount").textContent = `${fcI + 1} of ${deck.cards.length}`;
+    $("fcPrev").disabled = fcI === 0;
+    $("fcNext").textContent = fcI === deck.cards.length - 1 ? "Finish ✓" : "Next →";
+  }
+  $("fc").onclick = () => $("fc").classList.toggle("flip");
+  $("fcPrev").onclick = () => { if (fcI > 0) { fcI--; showCard(); } };
+  $("fcNext").onclick = () => {
+    if (fcI < deck.cards.length - 1) { fcI++; showCard(); }
+    else { toast(`🎉 You went through all ${deck.cards.length} cards!`); fcI = 0; showCard(); }
+  };
+  $("fcShuffle").onclick = () => { deck = { ...deck, cards: [...deck.cards].sort(() => Math.random() - 0.5) }; fcI = 0; showCard(); };
+  $("fcQuiz").onclick = () => startQuizFrom(deck.cards.map(c => `Q: ${c.q}\nA: ${c.a}`).join("\n"), deck.title);
+  $("cardsBack").onclick = openCards;
+  async function makeDeck(src, btnEl){
+    const old = btnEl ? btnEl.textContent : "";
+    if (btnEl) { btnEl.disabled = true; btnEl.textContent = "Making flashcards…"; }
+    try {
+      const d = cleanDeck(await gen("flashcards", `Make flashcards (8 to 12 cards) to help me study this. Reply with ONLY a flashcards block.\n\nTopic or notes:\n"""${src}"""`));
+      if (!d) throw new Error("Quorvyn couldn't make cards from that. Try a clearer topic.");
+      studyDeck(saveDeck(d));
+    } catch (e) {
+      openCards(); $("cardsMsg").textContent = e.message; $("cardsMsg").className = "msgline bad";
+    } finally { if (btnEl) { btnEl.disabled = false; btnEl.textContent = old; } }
+  }
+  $("cardsForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const t = $("cardsTopic").value.trim(); if (!t) { $("cardsTopic").focus(); return; }
+    makeDeck(t, $("cardsGo"));
+  });
+
+  // ---------- Quiz ----------
+  let quiz = null, quizLevel = "medium", quizSrc = "";
+  function openQuiz(){ $("quizHome").hidden = false; $("quizPlay").hidden = $("quizDone").hidden = true; $("quizMsg").textContent = ""; showLastQuiz(); openModal("quizModal"); setTimeout(() => $("quizTopic").focus(), 50); }
+  function showLastQuiz(){
+    const q = study.quizzes[study.quizzes.length - 1];
+    $("quizBest").textContent = q ? `Last quiz: ${q.title} (${q.score}/${q.total})` : "";
+  }
+  $("quizLevel").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    quizLevel = b.dataset.lv; $("quizLevel").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  });
+  async function startQuizFrom(src, label, btnEl){
+    quizSrc = src;
+    openModal("quizModal");
+    $("quizHome").hidden = false; $("quizPlay").hidden = $("quizDone").hidden = true;
+    const go = btnEl || $("quizGo"), old = go.textContent;
+    go.disabled = true; go.textContent = "Writing your quiz…";
+    $("quizMsg").textContent = label ? `Making a quiz about “${label}”…` : ""; $("quizMsg").className = "msgline";
+    try {
+      const q = cleanQuiz(await gen("quiz", `Make a ${quizLevel} multiple-choice quiz with exactly 5 questions about the topic below. Reply with ONLY a quiz block.\n\nTopic or notes:\n"""${src}"""`));
+      if (!q) throw new Error("Quorvyn couldn't make a quiz from that. Try a clearer topic.");
+      playQuiz(q);
+    } catch (e) { $("quizMsg").textContent = e.message; $("quizMsg").className = "msgline bad"; }
+    finally { go.disabled = false; go.textContent = old; }
+  }
+  function playQuiz(q){
+    quiz = { ...q, i: 0, score: 0 };
+    openModal("quizModal");
+    $("quizHome").hidden = $("quizDone").hidden = true; $("quizPlay").hidden = false;
+    $("quizTitle").textContent = q.title; showQ();
+  }
+  function showQ(){
+    const q = quiz.questions[quiz.i];
+    $("quizNum").textContent = `Question ${quiz.i + 1} of ${quiz.questions.length}`;
+    $("quizScore").textContent = `Score: ${quiz.score}`;
+    $("quizBar").style.width = (quiz.i / quiz.questions.length * 100) + "%";
+    $("quizQ").textContent = q.q; $("quizX").textContent = ""; $("quizNext").hidden = true;
+    const box = $("quizChoices"); box.innerHTML = "";
+    q.choices.forEach((c, k) => {
+      const b = el("button", { class: "qc", type: "button" }, String.fromCharCode(65 + k) + ".  " + c);
+      b.onclick = () => {
+        box.querySelectorAll(".qc").forEach((x, j) => { x.disabled = true; if (j === q.answer) x.classList.add("right"); });
+        if (k === q.answer) { quiz.score++; $("quizX").textContent = "✅ Correct! " + q.explain; }
+        else { b.classList.add("wrong"); $("quizX").textContent = "❌ Not quite. " + q.explain; }
+        $("quizScore").textContent = `Score: ${quiz.score}`;
+        $("quizNext").hidden = false; $("quizNext").textContent = quiz.i === quiz.questions.length - 1 ? "See my score" : "Next →";
+        $("quizNext").focus();
+      };
+      box.append(b);
+    });
+  }
+  $("quizNext").onclick = () => {
+    if (quiz.i < quiz.questions.length - 1) { quiz.i++; showQ(); return; }
+    const total = quiz.questions.length, pct = quiz.score / total;
+    $("quizPlay").hidden = true; $("quizDone").hidden = false;
+    $("quizFinal").textContent = `${quiz.score} / ${total}`;
+    $("quizMsg2").textContent = pct === 1 ? "Perfect score! 🏆" : pct >= .8 ? "Great job! 🌟" : pct >= .5 ? "Nice work. Review the ones you missed and try again." : "Good start. Try some flashcards, then take it again.";
+    study.quizzes = [...study.quizzes, { title: quiz.title, score: quiz.score, total, at: Date.now() }].slice(-50);
+    saveStudy(); markStudied();
+    if (pct === 1) chime();
+  };
+  $("quizAgain").onclick = () => playQuiz({ title: quiz.title, questions: [...quiz.questions].sort(() => Math.random() - 0.5) });
+  $("quizNew").onclick = openQuiz;
+  $("quizForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const t = $("quizTopic").value.trim(); if (!t) { $("quizTopic").focus(); return; }
+    startQuizFrom(t);
+  });
+
+  // ---------- Starred messages ----------
+  const starKey = t => { let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0; return "s" + h; };
+  function isStarred(text){ const k = starKey(text); return study.stars.some(s => s.key === k); }
+  function toggleStar(text){
+    const k = starKey(text);
+    if (isStarred(text)) study.stars = study.stars.filter(s => s.key !== k);
+    else {
+      const title = ((history.find(m => m.role === "user") || {}).content || "Chat").replace(/\s+/g, " ").slice(0, 60);
+      study.stars = [...study.stars, { key: k, text: text.slice(0, 8000), title, at: Date.now() }].slice(-200);
+    }
+    saveStudy(); renderStars();
+    return isStarred(text);
+  }
+  function renderStars(){
+    const list = $("starList"); if (!list) return;
+    list.innerHTML = "";
+    if (!study.stars.length) { list.append(el("div", { class: "empty" }, "No starred messages yet.")); return; }
+    [...study.stars].reverse().forEach(s => {
+      const item = el("div", { class: "star-item" });
+      const meta = el("div", { class: "sm" });
+      meta.append(el("span", null, `From “${s.title}” · ${new Date(s.at).toLocaleDateString()}`));
+      const bt = el("span");
+      bt.append(copyBtn("Copy", stripBlocks(s.text) || s.text));
+      const rm = el("button", { type: "button" }, "Remove");
+      rm.onclick = () => { study.stars = study.stars.filter(x => x.key !== s.key); saveStudy(); renderStars(); document.querySelectorAll(".actions .starb").forEach(b => b.dispatchEvent(new Event("sync"))); };
+      bt.append(rm); meta.append(bt);
+      const body = el("div", { class: "sbody" }); renderReply(body, s.text);
+      item.append(meta, body); list.append(item);
+    });
+  }
+
+  // Extra buttons under each reply
+  function studyActions(row, text){
+    const star = el("button", { class: "starb", type: "button" });
+    const sync = () => { const on = isStarred(text); star.textContent = on ? "★ Starred" : "☆ Star"; star.classList.toggle("on", on); };
+    star.addEventListener("sync", sync); sync();
+    star.onclick = () => { const on = toggleStar(text); sync(); toast(on ? "⭐ Saved to Starred" : "Removed from Starred", 1800); };
+    const fcb = el("button", { type: "button" }, "🃏 Flashcards");
+    fcb.onclick = () => makeDeck((stripBlocks(text) || text).slice(0, 3000), fcb);
+    const qb = el("button", { type: "button" }, "🧠 Quiz me");
+    qb.onclick = () => startQuizFrom((stripBlocks(text) || text).slice(0, 3000), "this answer");
+    row.append(star, fcb, qb);
+  }
+
+  // Cards inside chat replies (task / flashcards / quiz blocks)
+  function studyCard(kind, d){
+    const card = el("div", { class: "card" }), btns = el("div", { class: "btns" });
+    if (kind === "task") {
+      const title = String(d.title || d.text || "Task").slice(0, 140), due = String(d.due || "");
+      card.append(el("div", { class: "ctitle" }, "✅ TO-DO"));
+      const r = el("div", { class: "row" }); r.append(el("b", null, title)); card.append(r);
+      const dt = dueText({ due, done: false });
+      if (dt.text) card.append(el("div", { class: "row" }, dt.text));
+      const exists = () => study.tasks.some(t => t.text === title && t.due === due);
+      const add = el("button", { type: "button", class: "primary" }, exists() ? "✓ On your list" : "Add to my to-do list");
+      add.onclick = () => { if (!exists()) addTask(title, due); add.textContent = "✓ On your list"; };
+      const open = el("button", { type: "button" }, "Open to-do list"); open.onclick = openTasks;
+      btns.append(add, open);
+    } else if (kind === "flashcards") {
+      const dk = cleanDeck(d); if (!dk) throw new Error("bad deck");
+      card.append(el("div", { class: "ctitle" }, "🃏 FLASHCARDS"));
+      const r = el("div", { class: "row" }); r.append(el("b", null, dk.title), ` · ${dk.cards.length} cards`); card.append(r);
+      const go = el("button", { type: "button", class: "primary" }, "Study these"); go.onclick = () => studyDeck(saveDeck(dk));
+      btns.append(go);
+    } else {
+      const qz = cleanQuiz(d); if (!qz) throw new Error("bad quiz");
+      card.append(el("div", { class: "ctitle" }, "🧠 QUIZ"));
+      const r = el("div", { class: "row" }); r.append(el("b", null, qz.title), ` · ${qz.questions.length} questions`); card.append(r);
+      const go = el("button", { type: "button", class: "primary" }, "Start quiz"); go.onclick = () => playQuiz(qz);
+      btns.append(go);
+    }
+    card.append(btns);
+    return card;
+  }
+
+  // ---------- Homework photo + hints mode ----------
+  let hwPhoto = null, tutorOn = false;
+  try { tutorOn = localStorage.getItem("qv-tutor") === "1"; } catch {}
+  function setTutor(on){
+    tutorOn = on; try { localStorage.setItem("qv-tutor", on ? "1" : "0"); } catch {}
+    $("tutorChk").textContent = on ? "✓" : "";
+    $("tutorChip").hidden = !on || !!hwPhoto;
+  }
+  setTutor(tutorOn);
+  $("tutorOff").onclick = () => setTutor(false);
+  $("camBtn").onclick = () => $("camInput").click();
+  $("camInput").onchange = async e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try {
+      const url = URL.createObjectURL(f);
+      const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = url; });
+      const max = 1400, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      hwPhoto = c.toDataURL("image/jpeg", 0.8);
+      $("photoPrev").src = hwPhoto; $("photoChip").hidden = false; $("photoHints").checked = true; $("tutorChip").hidden = true;
+      updateSend(); input.focus();
+    } catch { toast("Couldn't open that picture. Try a JPG or PNG."); }
+  };
+  function clearPhoto(){ hwPhoto = null; $("photoChip").hidden = true; $("photoPrev").removeAttribute("src"); setTutor(tutorOn); updateSend(); }
+  $("photoX").onclick = clearPhoto;
+  function hasPhoto(){ try { return !!hwPhoto; } catch { return false; } }
+  function takePhoto(){
+    if (!hwPhoto) return null;
+    const p = { data: hwPhoto, tutor: $("photoHints").checked };
+    clearPhoto();
+    return p;
+  }
+
+  // ---------- Export ----------
+  function chatTitle(){ return ((history.find(m => m.role === "user") || {}).content || "Quorvyn chat").replace(/\s+/g, " ").slice(0, 60); }
+  function chatAs(fmt){
+    return history.map(m => {
+      const who = m.role === "user" ? "You" : "Quorvyn", body = m.role === "user" ? m.content : (stripBlocks(m.content) || m.content);
+      return fmt === "md" ? `**${who}:**\n\n${body}` : `${who}:\n${body}`;
+    }).join(fmt === "md" ? "\n\n---\n\n" : "\n\n");
+  }
+  function download(name, text, type){
+    const a = el("a", { href: URL.createObjectURL(new Blob([text], { type })), download: name });
+    document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  const fileBase = () => (chatTitle().replace(/[^\w\- ]+/g, "").trim().slice(0, 40) || "quorvyn-chat");
+  function needChat(){ if (history.length) return true; $("exMsg").textContent = "Start or open a chat first, then export it."; $("exMsg").className = "msgline bad"; return false; }
+  function openExport(){ $("exMsg").textContent = ""; openModal("exportModal"); }
+  $("exTxt").onclick = () => { if (needChat()) download(fileBase() + ".txt", `${chatTitle()}\n${new Date().toLocaleString()}\n\n${chatAs("txt")}\n`, "text/plain"); };
+  $("exMd").onclick = () => { if (needChat()) download(fileBase() + ".md", `# ${chatTitle()}\n\n_${new Date().toLocaleString()}_\n\n${chatAs("md")}\n`, "text/markdown"); };
+  $("exCopy").onclick = async () => {
+    if (!needChat()) return;
+    try { await navigator.clipboard.writeText(chatAs("txt")); $("exMsg").textContent = "Copied ✓"; $("exMsg").className = "msgline good"; }
+    catch { $("exMsg").textContent = "Couldn't copy."; $("exMsg").className = "msgline bad"; }
+  };
+  $("exPdf").onclick = () => {
+    if (!needChat()) return;
+    $("printHead").textContent = `${chatTitle()} · ${new Date().toLocaleDateString()}`;
+    closeModal("exportModal"); setTimeout(() => window.print(), 150);
+  };
+
+  // ---------- Themes ----------
+  function setTheme(t){
+    if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
+    try { t ? localStorage.setItem("qv-theme", t) : localStorage.removeItem("qv-theme"); } catch {}
+    $("themeList").querySelectorAll("button").forEach(b => b.classList.toggle("on", (b.dataset.theme || "") === (t || "")));
+  }
+  $("themeList").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setTheme(b.dataset.theme || ""); });
+  setTheme(document.documentElement.dataset.theme || "");
+
+  // ---------- Focus timer (lives in the clock) ----------
+  const clockEl = $("clock"), timerPop = $("timerPop");
+  const clockFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+  let tm = { preset: [25, 5], mode: "focus", running: false, endAt: 0, left: 25 * 60e3 };
+  try { tm = Object.assign(tm, JSON.parse(localStorage.getItem("qv-timer") || "{}")); } catch {}
+  const phaseMs = () => (tm.mode === "focus" ? tm.preset[0] : tm.preset[1]) * 60e3;
+  const saveTm = () => { try { localStorage.setItem("qv-timer", JSON.stringify(tm)); } catch {} };
+  const leftMs = () => tm.running ? Math.max(0, tm.endAt - Date.now()) : tm.left;
+  const mmss = ms => { const s = Math.ceil(ms / 1000); return `${Math.floor(s / 60)}:${pad2(s % 60)}`; };
+  function timerActive(){ return tm.running || tm.left < phaseMs() || tm.mode === "break"; }
+  function drawTimer(){
+    const ms = leftMs();
+    if (timerActive()) {
+      clockEl.textContent = (tm.mode === "focus" ? "⏱ " : "☕ ") + mmss(ms);
+      clockEl.className = "clock run" + (tm.mode === "break" ? " brk" : "") + (tm.running ? "" : " paused");
+      clockEl.setAttribute("aria-label", `${tm.mode === "focus" ? "Focus" : "Break"} timer, ${mmss(ms)} left. Open focus timer`);
+    } else {
+      const d = new Date(); clockEl.textContent = clockFmt.format(d); clockEl.className = "clock";
+      clockEl.setAttribute("aria-label", `${clockEl.textContent}. Open focus timer`);
+    }
+    if (!timerPop.hidden) {
+      $("tBig").textContent = mmss(ms);
+      $("tLabel").textContent = tm.mode === "focus" ? "Focus time" : "Break time ☕";
+      $("tStart").textContent = tm.running ? "Pause" : (ms < phaseMs() ? "Resume" : "Start");
+      $("tBar").style.width = ((1 - ms / phaseMs()) * 100) + "%";
+      timerPop.querySelectorAll("[data-preset]").forEach(b => b.classList.toggle("on", b.dataset.preset === tm.preset.join(",")));
+      const n = study.focus[ymd()] || 0;
+      $("tNote").textContent = `Work for ${tm.preset[0]} minutes, then take a ${tm.preset[1]} minute break.` + (n ? ` Focus sessions today: ${n}.` : " A chime plays when time is up.");
+    }
+  }
+  function phaseDone(skipped){
+    if (tm.mode === "focus") {
+      if (!skipped) {
+        const k = ymd(); study.focus[k] = (study.focus[k] || 0) + 1;
+        const keys = Object.keys(study.focus).sort(); if (keys.length > 60) delete study.focus[keys[0]];
+        saveStudy(); markStudied(); renderToday();
+        alertUser("⏱ Focus session done!", `Take a ${tm.preset[1]} minute break.`);
+      }
+      tm.mode = "break"; tm.left = phaseMs(); tm.running = true; tm.endAt = Date.now() + tm.left;
+    } else {
+      if (!skipped) alertUser("☕ Break's over.", "Ready for another round?");
+      tm.mode = "focus"; tm.left = phaseMs(); tm.running = false;
+    }
+    saveTm(); drawTimer();
+  }
+  function timerTick(){ if (tm.running && Date.now() >= tm.endAt) phaseDone(false); drawTimer(); }
+  setInterval(timerTick, 1000); timerTick();
+  $("tStart").onclick = () => {
+    unlockChime(); askNotify();
+    if (tm.running) { tm.left = leftMs(); tm.running = false; }
+    else { tm.running = true; tm.endAt = Date.now() + tm.left; }
+    saveTm(); drawTimer();
+  };
+  $("tReset").onclick = () => { tm.mode = "focus"; tm.running = false; tm.left = phaseMs(); saveTm(); drawTimer(); };
+  $("tSkip").onclick = () => phaseDone(true);
+  timerPop.querySelector(".tmode").addEventListener("click", e => {
+    const b = e.target.closest("[data-preset]"); if (!b) return;
+    tm.preset = b.dataset.preset.split(",").map(Number); tm.mode = "focus"; tm.running = false; tm.left = phaseMs();
+    saveTm(); drawTimer();
+  });
+
+  // ---------- Menus: study tools + timer ----------
+  const toolsMenu = $("toolsMenu"), toolsBtn = $("toolsBtn");
+  function hidePops(){ toolsMenu.hidden = true; timerPop.hidden = true; toolsBtn.setAttribute("aria-expanded", "false"); }
+  function toggleTimer(){ const open = timerPop.hidden; hidePops(); closeMenu(); timerPop.hidden = !open; drawTimer(); }
+  function toggleTools(){ const open = toolsMenu.hidden; hidePops(); closeMenu(); toolsMenu.hidden = !open; toolsBtn.setAttribute("aria-expanded", String(open)); }
+  clockEl.onclick = e => { e.stopPropagation(); toggleTimer(); };
+  toolsBtn.onclick = e => { e.stopPropagation(); toggleTools(); };
+  document.addEventListener("click", e => {
+    if (!toolsMenu.hidden && !toolsMenu.contains(e.target)) { toolsMenu.hidden = true; toolsBtn.setAttribute("aria-expanded", "false"); }
+    if (!timerPop.hidden && !timerPop.contains(e.target)) timerPop.hidden = true;
+  });
+  $("acctBtn").addEventListener("click", hidePops);
+  function runTool(t){
+    hidePops();
+    if (t === "cards") openCards();
+    else if (t === "quiz") openQuiz();
+    else if (t === "tasks") openTasks();
+    else if (t === "timer") setTimeout(toggleTimer, 0);
+    else if (t === "tutor") { setTutor(!tutorOn); toast(tutorOn ? "🧑‍🏫 Hints mode on: Quorvyn will guide you step by step." : "Hints mode off.", 2500); }
+    else if (t === "stars") { renderStars(); openModal("starsModal"); }
+    else if (t === "export") openExport();
+    else if (t === "theme") openModal("themeModal");
+    else if (t === "keys") openModal("keysModal");
+    else if (t === "help") openHelp();
+  }
+  document.querySelectorAll("[data-tool]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); runTool(b.dataset.tool); }));
+
+  // ---------- Keyboard shortcuts ----------
+  document.addEventListener("keydown", e => {
+    const mod = e.ctrlKey || e.metaKey;
+    const typing = e.target.closest && e.target.closest("input, textarea, select, [contenteditable]");
+    if (mod && !e.shiftKey && !e.altKey && e.key.toLowerCase() === "k") { e.preventDefault(); document.querySelectorAll(".overlay.open").forEach(o => o.classList.remove("open")); hidePops(); $("newBtn").click(); return; }
+    if (mod && e.key === "/") { e.preventDefault(); hidePops(); openModal("keysModal"); return; }
+    if (e.altKey && !mod && e.code === "KeyT") { e.preventDefault(); toggleTimer(); return; }
+    if (e.altKey && !mod && e.code === "KeyS") { e.preventDefault(); toggleTools(); return; }
+    if (e.key === "Escape") {
+      if (!toolsMenu.hidden || !timerPop.hidden) { hidePops(); return; }
+      const o = [...document.querySelectorAll(".overlay.open")].pop(); if (o) { o.classList.remove("open"); return; }
+    }
+    const inStudy = $("cardsModal").classList.contains("open") && !$("cardsStudy").hidden;
+    if (inStudy && !typing) {
+      if (e.key === "ArrowRight") { e.preventDefault(); $("fcNext").click(); return; }
+      if (e.key === "ArrowLeft") { e.preventDefault(); $("fcPrev").click(); return; }
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); $("fc").click(); return; }
+    }
+    if (e.key === "/" && !mod && !e.altKey && !typing && !document.querySelector(".overlay.open, .voice.open, .adminp.open")) { e.preventDefault(); input.focus(); }
+  });
+
+  renderToday();
+
   statusDot.classList.remove("off"); statusDot.title = "Online";
   updateSend();
   input.focus();
 })();
 
-// Small clock in the top-right corner
-(function(){
-  const el=document.getElementById('clock'); if(!el) return;
-  const fmt=new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'});
-  const tick=()=>{ const d=new Date(); el.textContent=fmt.format(d); el.dateTime=d.toISOString(); setTimeout(tick,60000-d.getSeconds()*1000-d.getMilliseconds()+50); };
-  tick();
-})();
 </script>
 </body>
 </html>
