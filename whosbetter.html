@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who's Better? — Settle Any Sports Debate with Verified Stats</title>
+<meta name="description" content="Type “LeBron or Jordan?” and get a side-by-side card with up-to-date, fact-checked stats and a short verdict. Any sport.">
+<meta name="theme-color" content="#07060d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07060d; --text:#f3f1ff; --muted:#a8a1c7; --dim:#7f7899;
+    --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.1); --line:rgba(255,255,255,.13);
+    --a:#00d0ff; --b:#ff4fb3; --violet:#6d3cff; --ok:#7ef0c8; --warn:#ffb86b; --accent:#c6a8ff;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0}
+  body{background:var(--bg); color:var(--text); font-family:Inter,system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh}
+  button,input{font-family:inherit}
+  a{color:var(--accent)}
+  .aurora{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+  .blob{position:absolute; border-radius:50%; filter:blur(100px); opacity:.35}
+  .b1{width:560px;height:560px;background:var(--a);top:-260px;left:-200px}
+  .b2{width:560px;height:560px;background:var(--b);top:-200px;right:-240px}
+  .b3{width:600px;height:400px;background:var(--violet);bottom:-260px;left:25%;opacity:.3}
+  main{position:relative; z-index:1; max-width:860px; margin:0 auto; padding:28px 16px 60px}
+  header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:28px}
+  .logo{font-weight:800; font-size:20px; letter-spacing:-.02em; text-decoration:none; color:var(--text)}
+  .logo span{background:linear-gradient(90deg,var(--a),var(--b)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .back{font-size:13px; color:var(--muted); text-decoration:none}
+  .back:hover{color:var(--text)}
+  h1{font-size:clamp(30px,6vw,48px); line-height:1.05; letter-spacing:-.03em; margin:0 0 10px; text-align:center}
+  .sub{color:var(--muted); text-align:center; margin:0 0 24px; font-size:15.5px}
+  form{display:flex; gap:8px; padding:6px; border-radius:999px; background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(16px)}
+  form input{flex:1; min-width:0; background:transparent; border:none; outline:none; color:var(--text); font-size:17px; padding:10px 16px}
+  form input::placeholder{color:var(--dim)}
+  form button{border:none; border-radius:999px; padding:0 22px; font-weight:700; font-size:15px; color:#07060d; background:linear-gradient(90deg,var(--a),var(--b)); cursor:pointer}
+  form button:disabled{opacity:.5; cursor:default}
+  .chips{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:16px 0 0}
+  .chip{background:var(--glass); border:1px solid var(--line); color:var(--muted); border-radius:999px; padding:7px 13px; font-size:13px; cursor:pointer}
+  .chip:hover{color:var(--text); background:var(--glass2)}
+
+  .status{margin:36px auto 0; text-align:center; color:var(--muted); font-size:14.5px}
+  .spin{width:34px; height:34px; border-radius:50%; margin:0 auto 14px; border:3px solid var(--line); border-top-color:var(--a); border-right-color:var(--b); animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .err{margin:28px auto 0; max-width:520px; text-align:center; padding:14px 18px; border-radius:16px; background:rgba(255,138,154,.1); border:1px solid rgba(255,138,154,.35); color:#ffc4cc}
+
+  .card{margin-top:30px; border-radius:24px; background:rgba(20,16,34,.6); border:1px solid var(--line); backdrop-filter:blur(20px); overflow:hidden}
+  .top{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; padding:24px 20px 18px}
+  .side{text-align:center; min-width:0}
+  .av{width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:grid; place-items:center; font-weight:800; font-size:22px; color:#07060d; position:relative}
+  .sa .av{background:var(--a)} .sb .av{background:var(--b)}
+  .crown{position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:20px}
+  .name{font-weight:800; font-size:clamp(16px,3.4vw,22px); letter-spacing:-.01em; overflow-wrap:anywhere}
+  .info{color:var(--muted); font-size:12.5px; margin-top:4px; overflow-wrap:anywhere}
+  .tag{display:inline-block; margin-top:7px; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--glass2); color:var(--muted)}
+  .vs{font-weight:800; font-size:14px; color:var(--dim); text-align:center}
+  .vs .sport{display:block; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-top:6px; font-weight:700}
+
+  .rows{padding:0 12px 6px}
+  .row{display:grid; grid-template-columns:1fr minmax(110px,1.1fr) 1fr; align-items:center; gap:8px; padding:11px 8px; border-top:1px solid var(--line)}
+  .val{font-family:"JetBrains Mono",monospace; font-size:clamp(15px,3.2vw,19px); font-weight:500; display:flex; align-items:center; gap:6px; color:var(--muted)}
+  .val.va{justify-content:flex-end} .val.vb{justify-content:flex-start}
+  .val.win{color:var(--text); font-weight:700}
+  .va.win{text-shadow:0 0 18px rgba(0,208,255,.55)} .vb.win{text-shadow:0 0 18px rgba(255,79,179,.55)}
+  .chk{font-family:Inter,sans-serif; font-size:11px; width:17px; height:17px; flex:none; border-radius:50%; display:inline-grid; place-items:center; font-weight:800}
+  .chk.ok{background:rgba(126,240,200,.15); color:var(--ok)}
+  .chk.no{background:rgba(255,184,107,.15); color:var(--warn)}
+  .mid{text-align:center; min-width:0}
+  .lab{font-size:13.5px; font-weight:600}
+  .note{font-size:11px; color:var(--dim); margin-top:2px}
+  .bar{display:flex; height:4px; border-radius:4px; overflow:hidden; margin-top:7px; background:var(--glass2)}
+  .bar i{display:block; height:100%}
+  .bar .ba{background:var(--a)} .bar .bb{background:var(--b)}
+
+  .tally{display:flex; justify-content:center; gap:10px; padding:14px; border-top:1px solid var(--line); font-size:13.5px; color:var(--muted)}
+  .tally b{color:var(--text)}
+  .verdict{margin:0 16px 16px; padding:16px 18px; border-radius:18px; background:linear-gradient(135deg,rgba(0,208,255,.1),rgba(255,79,179,.1)); border:1px solid var(--line)}
+  .verdict .vh{font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--accent); margin-bottom:6px}
+  .verdict p{margin:0; line-height:1.55; font-size:15px}
+  .verdict .warnline{margin-top:8px; font-size:12.5px; color:var(--warn)}
+
+  .foot{padding:14px 18px 18px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted)}
+  .badge{display:inline-flex; align-items:center; gap:6px; font-weight:600; padding:5px 10px; border-radius:999px; font-size:12px}
+  .badge.ok{background:rgba(126,240,200,.12); color:var(--ok)}
+  .badge.part{background:rgba(255,184,107,.12); color:var(--warn)}
+  .frow{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px}
+  .acts{display:flex; gap:8px}
+  .btn{background:var(--glass); border:1px solid var(--line); color:var(--text); border-radius:999px; padding:7px 13px; font-size:12.5px; cursor:pointer}
+  .btn:hover{background:var(--glass2)}
+  .src{margin-top:12px}
+  .src summary{cursor:pointer; color:var(--muted)}
+  .src ul{margin:8px 0 0; padding-left:18px; line-height:1.7}
+  .legend{margin-top:10px; color:var(--dim); font-size:11.5px}
+  .disc{margin-top:26px; text-align:center; color:var(--dim); font-size:12px; line-height:1.6}
+  .recent{margin-top:18px; text-align:center}
+  .recent .rh{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-bottom:6px}
+
+  @media (max-width:560px){
+    .top{padding:20px 10px 14px; gap:6px}
+    .av{width:52px; height:52px; font-size:18px}
+    .rows{padding:0 4px 4px}
+    .row{grid-template-columns:1fr minmax(92px,1fr) 1fr; gap:6px; padding:10px 6px}
+    .lab{font-size:12.5px}
+    form input{font-size:16px; padding:10px 12px}
+    form button{padding:0 16px}
+  }
+</style>
+</head>
+<body>
+<div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<main>
+  <header>
+    <a class="logo" href="/whosbetter">Who's <span>Better?</span></a>
+    <a class="back" href="/">← Quorvyn</a>
+  </header>
+
+  <h1>Settle the debate.</h1>
+  <p class="sub">Any two athletes or teams, any sport. Stats are looked up live on Google and fact-checked.</p>
+
+  <form id="f" autocomplete="off">
+    <input id="q" maxlength="120" placeholder="LeBron or Jordan?" aria-label="Who do you want to compare?">
+    <button id="go" type="submit">Compare</button>
+  </form>
+  <div class="chips" id="ex"></div>
+
+  <div class="status" id="status" hidden><div class="spin"></div><div id="stxt">Searching Google for the latest stats…</div></div>
+  <div class="err" id="err" hidden></div>
+  <div id="out"></div>
+  <div class="recent" id="recent" hidden><div class="rh">Recent</div><div class="chips" id="rlist" style="margin:0"></div></div>
+
+  <p class="disc">Stats come from Google Search via Google's Gemini AI and are double-checked by a second search, but AI can still make mistakes.
+  Numbers with a ✓ were confirmed; ones with a ? couldn't be confirmed. Tap “Sources” to check them yourself.</p>
+</main>
+
+<script>
+const EXAMPLES = ["LeBron or Jordan?", "Messi or Ronaldo?", "Brady or Mahomes?", "Federer or Djokovic?", "Hamilton or Verstappen?", "Gretzky or Ovechkin?", "Ohtani or Babe Ruth?", "Serena or Steffi Graf?", "Tiger or Jack Nicklaus?", "Lakers or Celtics?"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = s => { const m = String(s).replace(/,/g, "").match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+const initials = n => n.split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join("").toUpperCase() || "?";
+
+function chips(el, list){
+  el.innerHTML = "";
+  list.forEach(t => { const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = t; b.onclick = () => run(t); el.appendChild(b); });
+}
+chips($("ex"), EXAMPLES);
+
+function recent(add){
+  let r = [];
+  try { r = JSON.parse(localStorage.getItem("wb-recent") || "[]"); } catch {}
+  if (add) { r = [add, ...r.filter(x => x.toLowerCase() !== add.toLowerCase())].slice(0, 6); try { localStorage.setItem("wb-recent", JSON.stringify(r)); } catch {} }
+  $("recent").hidden = !r.length; chips($("rlist"), r);
+}
+recent();
+
+let busy = false, timer;
+async function run(q, fresh){
+  q = (q || "").trim();
+  if (!q || busy) return;
+  $("q").value = q; busy = true; $("go").disabled = true;
+  $("err").hidden = true; $("out").innerHTML = ""; $("status").hidden = false;
+  const steps = ["Searching Google for the latest stats…", "Reading official stat sites…", "Fact-checking every number with a second search…", "Almost there…"];
+  let i = 0; $("stxt").textContent = steps[0];
+  timer = setInterval(() => { if (i < steps.length - 1) $("stxt").textContent = steps[++i]; }, 6000);
+  const u = new URL(location); u.searchParams.set("q", q); history.replaceState(null, "", u);
+  try {
+    const res = await fetch("/api/compare", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ q, fresh: !!fresh }) });
+    const d = await res.json().catch(() => ({ error: "Something went wrong. Please try again." }));
+    if (d.error) throw new Error(d.error);
+    render(d); recent(q);
+  } catch (e) {
+    $("err").textContent = e.message || "Couldn't connect. Check your internet and try again."; $("err").hidden = false;
+  } finally {
+    clearInterval(timer); $("status").hidden = true; busy = false; $("go").disabled = false;
+  }
+}
+
+function render(d){
+  let wa = 0, wb = 0;
+  const rows = d.stats.map(s => {
+    const x = num(s.a), y = num(s.b);
+    let win = "";
+    if (s.better !== "none" && !isNaN(x) && !isNaN(y) && x !== y) win = (s.better === "lower" ? x < y : x > y) ? "a" : "b";
+    if (win === "a") wa++; if (win === "b") wb++;
+    let bar = "";
+    if (!isNaN(x) && !isNaN(y) && x >= 0 && y >= 0 && x + y > 0) {
+      const p = Math.round(x / (x + y) * 100);
+      bar = `<div class="bar"><i class="ba" style="width:${p}%"></i><i class="bb" style="width:${100 - p}%"></i></div>`;
+    }
+    const chk = ok => ok ? `<span class="chk ok" title="Verified">✓</span>` : `<span class="chk no" title="Couldn't be verified">?</span>`;
+    return `<div class="row">
+      <div class="val va ${win === "a" ? "win" : ""}">${chk(s.a_ok)}${esc(s.a)}</div>
+      <div class="mid"><div class="lab">${esc(s.label)}</div>${s.note ? `<div class="note">${esc(s.note)}</div>` : ""}${bar}</div>
+      <div class="val vb ${win === "b" ? "win" : ""}">${esc(s.b)}${chk(s.b_ok)}</div>
+    </div>`;
+  }).join("");
+
+  const total = d.stats.length * 2;
+  const okCount = d.stats.reduce((n, s) => n + (s.a_ok ? 1 : 0) + (s.b_ok ? 1 : 0), 0);
+  const badge = d.verified && okCount === total
+    ? `<span class="badge ok">✓ All ${total} numbers verified with Google</span>`
+    : d.verified ? `<span class="badge part">✓ ${okCount} of ${total} numbers verified</span>`
+    : `<span class="badge part">? Fact-check unavailable right now</span>`;
+  const lead = wa === wb ? `Even <b>${wa}–${wb}</b> on stats` :
+    `<b>${esc(wa > wb ? d.a.name : d.b.name)}</b> leads <b>${Math.max(wa, wb)}–${Math.min(wa, wb)}</b> on stats`;
+  const crown = side => d.winner === side ? `<span class="crown">👑</span>` : "";
+  const wname = d.winner === "a" ? d.a.name : d.winner === "b" ? d.b.name : "Too close to call";
+  const src = (d.sources || []).map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a></li>`).join("");
+
+  $("out").innerHTML = `<div class="card">
+    <div class="top">
+      <div class="side sa"><div class="av">${crown("a")}${esc(initials(d.a.name))}</div><div class="name">${esc(d.a.name)}</div><div class="info">${esc(d.a.info)}</div><span class="tag">${d.a.active ? "Active" : "Retired"}</span></div>
+      <div class="vs">VS<span class="sport">${esc(d.sport)}</span></div>
+      <div class="side sb"><div class="av">${crown("b")}${esc(initials(d.b.name))}</div><div class="name">${esc(d.b.name)}</div><div class="info">${esc(d.b.info)}</div><span class="tag">${d.b.active ? "Active" : "Retired"}</span></div>
+    </div>
+    <div class="rows">${rows}</div>
+    <div class="tally">${lead}</div>
+    <div class="verdict"><div class="vh">Verdict · ${esc(wname)}</div><p>${esc(d.verdict)}</p>
+      ${d.corrected ? `<div class="warnline">Heads up: the fact-check corrected some numbers after this verdict was written.</div>` : ""}</div>
+    <div class="foot">
+      <div class="frow">${badge}<div class="acts"><button class="btn" id="share" type="button">Share</button><button class="btn" id="again" type="button">↻ Refresh</button></div></div>
+      <div class="legend">Stats as of ${esc(d.asOf)}${d.cached ? " (saved result)" : ""}. ✓ = confirmed by a second Google search · ? = couldn't be confirmed.</div>
+      ${src ? `<details class="src"><summary>Sources (${d.sources.length})</summary><ul>${src}</ul></details>` : ""}
+    </div>
+  </div>`;
+
+  $("again").onclick = () => run(d.query, true);
+  $("share").onclick = async () => {
+    const url = location.origin + location.pathname + "?q=" + encodeURIComponent(d.query);
+    const text = `${d.a.name} vs ${d.b.name}: ${wname}${d.winner === "even" ? "" : " wins"}. ${d.verdict}`;
+    try { if (navigator.share) { await navigator.share({ title: "Who's Better?", text, url }); return; } } catch { return; }
+    try { await navigator.clipboard.writeText(url); $("share").textContent = "Link copied!"; setTimeout(() => $("share").textContent = "Share", 1800); } catch {}
+  };
+}
+
+$("f").addEventListener("submit", e => { e.preventDefault(); run($("q").value); });
+const start = new URLSearchParams(location.search).get("q");
+if (start) run(start);
+</script>
+</body>
+</html>
