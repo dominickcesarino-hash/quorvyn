@@ -1,0 +1,59 @@
+QUORVYN MESSAGES: FIREBASE RULES TO ADD
+=======================================
+
+Messages and group chats are stored in a new "rooms" collection in Firestore.
+Firebase blocks it until you allow it, so add these rules once:
+
+1. Go to https://console.firebase.google.com and open the "quorvyn1" project.
+2. Click Firestore Database (left menu), then the "Rules" tab.
+3. Find the line that says:   match /databases/{database}/documents {
+4. Paste everything between the two lines of dashes below on a new line
+   right AFTER that line. Don't delete any of your existing rules.
+5. Click "Publish".
+
+--------------------------------------------------------------------------
+    // ---- Quorvyn messages: direct messages and group chats ----
+    match /rooms/{roomId} {
+      // Only people in a conversation can see it
+      allow read: if request.auth != null
+        && request.auth.uid in resource.data.members;
+      // You can start a chat that includes you (2 to 20 people)
+      allow create: if request.auth != null
+        && request.resource.data.members is list
+        && request.auth.uid in request.resource.data.members
+        && request.resource.data.members.size() >= 2
+        && request.resource.data.members.size() <= 20
+        && request.resource.data.createdBy == request.auth.uid;
+      // Members can rename, add people, leave, and update the preview
+      allow update: if request.auth != null
+        && request.auth.uid in resource.data.members
+        && request.resource.data.members.size() <= 20
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['members', 'memberInfo', 'name', 'lastText', 'lastBy', 'updatedAt']);
+
+      match /messages/{msgId} {
+        allow read: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.members;
+        allow create: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.members
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 4000;
+        // You can delete your own messages
+        allow delete: if request.auth != null
+          && resource.data.uid == request.auth.uid;
+      }
+    }
+--------------------------------------------------------------------------
+
+Also make sure signed-in users can read the "usernames" collection (that's how
+people find each other by @username). Your site already checks usernames when
+someone picks one, so this is most likely allowed already. If "New message"
+says it can't find a username that exists, add this too:
+
+    match /usernames/{name} {
+      allow read: if request.auth != null;
+    }
+
+(If you already have a "match /usernames/{name}" block, leave yours as is.)

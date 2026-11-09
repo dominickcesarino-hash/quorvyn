@@ -519,6 +519,116 @@
     .card{background:#fafafa; color:#000; backdrop-filter:none}
     .print-head{display:block!important; font-size:18px; font-weight:700; margin-bottom:12px}
   }
+
+  /* ===== Countdowns, instant answers, writing helper, translator, messages ===== */
+  .msgb{position:relative}
+  @media (max-width:440px){ body.signedin .navL .brand{font-size:0; gap:0; padding:0 8px 0 4px} }
+  .msgb.has-unread:after{content:""; position:absolute; top:6px; right:6px; width:9px; height:9px; border-radius:50%; background:var(--pink); box-shadow:0 0 0 2px rgba(20,16,34,.9), 0 0 10px var(--pink)}
+  @media (max-width:520px){ .navR .navic{width:34px; height:34px; font-size:15px} .navR{gap:2px} .clock{padding:0 6px; font-size:12px} .clock.run{padding:0 8px} }
+
+  .cdrow{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:10px; width:min(880px,calc(100vw - 40px))}
+  .cd{display:flex; align-items:center; gap:8px; font:inherit; font-size:13px; padding:7px 14px 7px 10px; border-radius:14px; border:1px solid var(--line); background:rgba(20,16,34,.4); color:var(--text)}
+  .cd:hover{border-color:var(--line2)}
+  .cd .cde{font-size:18px}
+  .cd .cdn{color:var(--muted); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .cd b{font-weight:700}
+  .cd.add{color:var(--muted); border-style:dashed; background:transparent; padding:7px 14px}
+  .modal input[type=date]{background:rgba(255,255,255,.06); border:1px solid var(--line); color:var(--text); border-radius:14px; padding:10px 12px; font:inherit; font-size:14px; outline:none; color-scheme:dark}
+
+  .card.instant .ires{font-size:30px; font-weight:700; letter-spacing:-.02em; margin:4px 0 2px; word-break:break-all;
+    background:linear-gradient(90deg,#9ee8ff,#c6a8ff,#ffb0dc); -webkit-background-clip:text; background-clip:text; color:transparent}
+
+  .wrmodes{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  .wrmodes button{font:inherit; font-size:13.5px; padding:9px 14px; border-radius:999px; border:1px solid var(--line2); background:var(--glass); color:var(--text)}
+  .wrmodes button:hover:not(:disabled){background:var(--glass2)}
+  .wrmodes button:disabled{opacity:.5; cursor:default}
+  .wrout{white-space:pre-wrap; font-size:15px; line-height:1.6; padding:14px 16px; border-radius:16px; background:var(--glass); border:1px solid var(--line); max-height:40vh; overflow-y:auto}
+
+  .modal.trmodal{max-width:620px}
+  .trlangs{display:flex; align-items:flex-end; gap:10px}
+  .trlangs label{flex:1; margin:0 !important}
+  .trlangs select{display:block; width:100%; margin-top:6px}
+  .trswap{width:40px; height:40px; flex:none; border-radius:50%; border:1px solid var(--line2); background:var(--glass); color:var(--text); font-size:16px}
+  .trlog{margin:14px 0 10px; height:min(38vh,320px); overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:4px}
+  .trb{max-width:85%; padding:10px 14px; border-radius:18px; position:relative}
+  .trb.A{align-self:flex-end; background:linear-gradient(135deg,rgba(109,60,255,.45),rgba(255,79,179,.28)); border-bottom-right-radius:6px}
+  .trb.B{align-self:flex-start; background:var(--glass2); border-bottom-left-radius:6px}
+  .trb .tro{font-size:12.5px; color:var(--muted)}
+  .trb .trt{font-size:16.5px; line-height:1.45; margin-top:3px; padding-right:24px}
+  .trb .trt.err{color:var(--danger); font-size:14px}
+  .trsay{position:absolute; right:6px; bottom:6px; background:none; border:none; font-size:14px; opacity:.7}
+  .trrow{display:flex; gap:8px; align-items:center; margin-top:8px}
+  .trrow input{flex:1; min-width:0}
+  .trrow .ic.listening{background:var(--pink); border-color:var(--pink)}
+  .trrow.A input{border-color:rgba(198,168,255,.45) !important}
+
+  .msgp{position:fixed; inset:0; z-index:66; display:none; background:rgba(7,6,13,.86); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px)}
+  .msgp.open{display:block}
+  .mwrap{max-width:1040px; height:100%; margin:0 auto; display:grid; grid-template-columns:320px 1fr; gap:14px; padding:16px}
+  .mside,.mmain{min-height:0; display:flex; flex-direction:column; border-radius:24px; background:rgba(26,21,42,.7); border:1px solid var(--line)}
+  .mside{padding:16px}
+  .mhead2{display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .mhead2 h2{margin:0; font-size:20px}
+  .needuser{margin-top:12px; font-size:13px; padding:10px 12px; border-radius:14px; background:rgba(255,184,107,.12); border:1px solid rgba(255,184,107,.35); color:#ffe2c4}
+  .mnew{display:flex; gap:8px; margin-top:14px}
+  .mnew .abtn{flex:1}
+  .newbox{margin-top:10px}
+  .newbox form{display:flex; flex-direction:column; gap:8px}
+  .newbox input{width:100%; background:rgba(255,255,255,.06); border:1px solid var(--line); color:var(--text); border-radius:12px; padding:10px 12px; font:inherit; font-size:14px; outline:none}
+  .rooms{flex:1; overflow-y:auto; margin:12px -6px 0; padding:0 6px}
+  .room{display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px; border-radius:14px; border:none; background:none; color:var(--text); font:inherit}
+  .room:hover{background:var(--glass)}
+  .room.active{background:var(--glass2)}
+  .rava{width:38px; height:38px; border-radius:50%; flex:none; display:grid; place-items:center; font-weight:700; font-size:15px; color:#fff; background:linear-gradient(135deg,var(--pink),var(--violet))}
+  .rava.grp{background:linear-gradient(135deg,var(--cyan),var(--violet)); font-size:17px}
+  .rinfo{flex:1; min-width:0}
+  .rinfo b{display:block; font-weight:600; font-size:14.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .rinfo small{display:block; color:var(--dim); font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .room.unread b{color:#fff} .room.unread small{color:var(--text); font-weight:600}
+  .room.unread:after{content:""; width:9px; height:9px; border-radius:50%; background:var(--pink); flex:none}
+  .mnote{font-size:11.5px; color:var(--dim); line-height:1.5; margin-top:10px}
+  .mmain{overflow:hidden}
+  .roomempty{margin:auto; text-align:center; color:var(--muted); font-size:14px}
+  .roomempty div{font-size:40px; margin-bottom:8px}
+  .roompane{display:flex; flex-direction:column; height:100%; min-height:0}
+  .roomhead{display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--line)}
+  .roomhead .rh{flex:1; min-width:0}
+  .roomhead .rh b{display:block; font-size:16px}
+  .roomhead .rh small{display:block; color:var(--dim); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .roomback{display:none}
+  .roommsgs{flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:3px}
+  .mday{align-self:center; font-size:11.5px; color:var(--dim); margin:12px 0 6px}
+  .mrow{display:flex; flex-direction:column; align-items:flex-start; position:relative; max-width:80%}
+  .mrow.mine{align-self:flex-end; align-items:flex-end}
+  .mwho{font-size:11.5px; color:var(--muted); margin:8px 0 2px 10px}
+  .mbub{padding:9px 14px; border-radius:18px; background:var(--glass2); font-size:14.5px; line-height:1.5; white-space:pre-wrap; word-wrap:break-word; max-width:100%}
+  .mrow.mine .mbub{background:linear-gradient(135deg,rgba(109,60,255,.6),rgba(255,79,179,.4))}
+  .mrow.bot .mbub{white-space:normal; background:rgba(0,208,255,.1); border:1px solid rgba(0,208,255,.3)}
+  .mrow.bot .mbub p{margin:0 0 6px} .mrow.bot .mbub p:last-child{margin:0}
+  .mrow.bot .mbub ul,.mrow.bot .mbub ol{margin:4px 0; padding-left:20px}
+  .mdel{position:absolute; top:50%; transform:translateY(-50%); left:-26px; background:none; border:none; color:var(--dim); font-size:15px; opacity:0}
+  .mrow:not(.mine) .mdel{left:auto; right:-26px}
+  .mrow:hover .mdel,.mdel:focus{opacity:.8}
+  .roomform{display:flex; align-items:flex-end; gap:8px; padding:12px; border-top:1px solid var(--line)}
+  .roomform textarea{flex:1; resize:none; border:1px solid var(--line); border-radius:20px; padding:10px 14px; background:rgba(255,255,255,.05); max-height:140px; font-size:15px}
+  @media (max-width:760px){
+    .mwrap{grid-template-columns:1fr; padding:10px}
+    .msgp.inroom .mside{display:none}
+    .msgp:not(.inroom) .mmain{display:none}
+    .roomback{display:inline-block}
+    .mdel{opacity:.6}
+  }
+  :root[data-theme="light"] .msgp{background:rgba(246,243,255,.9)}
+  :root[data-theme="light"] :is(.mside,.mmain){background:rgba(255,255,255,.85)}
+  :root[data-theme="light"] .abtn{color:var(--text)}
+  :root[data-theme="light"] .abtn.white{background:#1d1838; color:#fff; border-color:#1d1838}
+  :root[data-theme="light"] :is(.mrow.mine .mbub,.trb.A){color:#fff}
+  :root[data-theme="light"] .room.unread b{color:var(--text)}
+  :root[data-theme="light"] .needuser{color:#8a4b00}
+  :root[data-theme="light"] .cd{background:rgba(255,255,255,.6)}
+  :root[data-theme="light"] .card.instant .ires{background-image:linear-gradient(90deg,#0089b3,#6d3cff,#d62f8c)}
+  :root[data-theme="light"] .modal input[type=date]{color-scheme:light}
+  @media print{ .msgp,.cdrow{display:none!important} }
 </style>
 </head>
 <body>
@@ -530,6 +640,7 @@
 </nav>
 <nav class="navR">
   <button class="clock" id="clock" type="button" title="Focus timer" aria-label="Current time. Open focus timer"></button>
+  <button class="navic msgb" id="msgBtn" title="Messages" aria-label="Messages" hidden>💬</button>
   <button class="navic" id="toolsBtn" title="Study tools" aria-label="Study tools" aria-expanded="false">🧰</button>
   <button class="navic" id="helpBtn" title="Help and tour" aria-label="Help and tour">?</button>
   <button class="navic" id="newBtn" title="New chat" aria-label="New chat">＋</button>
@@ -556,6 +667,10 @@
   <button class="mi" data-tool="timer" type="button">⏱ Focus timer</button>
   <button class="mi" data-tool="tutor" type="button">🧑‍🏫 Hints, not answers <span class="mcheck" id="tutorChk"></span></button>
   <button class="mi" data-tool="stars" type="button">⭐ Starred messages</button>
+  <button class="mi" data-tool2="countdown" type="button">⏳ Countdowns</button>
+  <button class="mi" data-tool2="write" type="button">✍️ Writing helper</button>
+  <button class="mi" data-tool2="translate" type="button">🌍 Translate a conversation</button>
+  <button class="mi" data-tool2="messages" type="button">💬 Messages &amp; group chats</button>
   <button class="mi" data-tool="export" type="button">⬇ Export this chat</button>
   <div class="msep"></div>
   <button class="mi" data-tool="theme" type="button">🎨 Theme</button>
@@ -617,8 +732,12 @@
         <button type="button" data-tool="tasks">✅ To-do list</button>
         <button type="button" data-tool="timer">⏱ Focus timer</button>
         <button type="button" data-tool="stars">⭐ Starred</button>
+        <button type="button" data-tool2="write">✍️ Writing helper</button>
+        <button type="button" data-tool2="translate">🌍 Translate</button>
+        <button type="button" data-tool2="messages">💬 Messages</button>
         <button type="button" data-tool="theme">🎨 Theme</button>
       </div>
+      <div class="cdrow" id="cdRow"></div>
     </section>
     <div class="print-head" id="printHead">Quorvyn chat</div>
     <div id="log"></div>
@@ -727,6 +846,9 @@
     <div class="hsec"><b>📷 Homework help</b><p>Tap the camera button in the message bar to add a photo of a problem. With <i>Hints, not answers</i> on, Quorvyn walks you through it step by step instead of just giving the answer. You can turn hints mode on for every chat from the 🧰 menu.</p></div>
     <div class="hsec"><b>⏱ Focus timer and 🔥 streaks</b><p>Tap the clock (top right) to start a focus timer (25 minutes of work, then a 5 minute break). The <i>Today</i> card shows your study streak, focus sessions and what's due.</p></div>
     <div class="hsec"><b>🎨 Themes and ⌨ shortcuts</b><p>Pick Aurora, Ocean, Sunset, Forest or Light from <i>🎨 Theme</i>. Press <i>Ctrl + K</i> for a new chat, <i>/</i> to jump to the message box, and <i>Ctrl + /</i> to see all shortcuts.</p></div>
+    <div class="hsec"><b>💬 Messages and group chats</b><p>When you're signed in with a @username, tap 💬 (top right) to message friends by their @username or make a group chat (up to 20 people). Type <i>@quorvyn</i> in any chat and Quorvyn joins in to answer. Only the people in a chat can see it.</p></div>
+    <div class="hsec"><b>🧮 Instant math and conversions</b><p>Type things like <i>15% of 80</i>, <i>(12+8)*3</i>, <i>5 miles in km</i> or <i>72 f to c</i> and get the answer right away, no waiting.</p></div>
+    <div class="hsec"><b>✍️ Writing helper, 🌍 translator and ⏳ countdowns</b><p>From 🧰: paste text to fix grammar, shorten it, make it formal or casual, or turn it into bullet points. <i>Translate a conversation</i> lets you talk with someone in another language, out loud. <i>Countdowns</i> show the days until birthdays, breaks or trips on your home screen.</p></div>
     <div class="hsec"><b>🔊 Read replies aloud</b><p>Turn it on from your name menu (or the 🔊 button if you're not signed in) and every reply is read out loud.</p></div>
     <div class="hsec admin-only" hidden><b>🛡 Admin (only you see this)</b><p>Open <i>Admin</i> from your name menu to see stats, post an announcement, pause Quorvyn, ban or unban accounts, and give or take back OG badges.</p></div>
     <div class="hsec"><b>🔒 Privacy</b><p>Messages, screenshots and voice replies are processed by Google's free Gemini service, which may use them to improve its products, so don't share passwords or private info. Your saved chats are only visible to you.</p></div>
@@ -862,6 +984,94 @@
   </div>
 </div>
 
+<div class="overlay" id="cdModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <h2>⏳ Countdowns</h2>
+    <p class="sub">Count down to birthdays, breaks, trips or big games. They show on your home screen.</p>
+    <form class="addrow" id="cdForm">
+      <select id="cdEmoji" aria-label="Emoji"><option>⏳</option><option>🎂</option><option>🏖</option><option>🎄</option><option>✈️</option><option>🎉</option><option>🏆</option><option>📚</option><option>🎓</option><option>⚽</option><option>🎮</option><option>❤️</option></select>
+      <input type="text" id="cdName" maxlength="60" placeholder="Summer break" autocomplete="off" required>
+      <input type="date" id="cdDate" aria-label="Date" required>
+      <button class="abtn2" type="submit">Add</button>
+    </form>
+    <label class="switch" style="margin-top:10px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px"><input type="checkbox" id="cdYearly"> Repeats every year (birthdays, holidays)</label>
+    <div class="tlist" id="cdList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="writeModal">
+  <div class="modal wide">
+    <button class="x" data-close>×</button>
+    <h2>✍️ Writing helper</h2>
+    <p class="sub">Paste your text, then pick what you want Quorvyn to do with it.</p>
+    <textarea id="wrIn" maxlength="3500" rows="6" placeholder="Paste an essay paragraph, an email, a text message…"></textarea>
+    <div class="wrmodes" id="wrModes">
+      <button type="button" data-mode="fix">✅ Fix grammar</button>
+      <button type="button" data-mode="shorter">✂️ Make shorter</button>
+      <button type="button" data-mode="formal">👔 More formal</button>
+      <button type="button" data-mode="casual">😊 More casual</button>
+      <button type="button" data-mode="bullets">• Bullet points</button>
+      <button type="button" data-mode="longer">➕ Add detail</button>
+    </div>
+    <div class="msgline" id="wrMsg"></div>
+    <div id="wrOutBox" hidden>
+      <label>Result</label>
+      <div class="wrout" id="wrOut"></div>
+      <div class="qbtns"><button type="button" class="primary" id="wrCopy">📋 Copy</button><button type="button" id="wrAgain">↺ Edit this more</button><button type="button" id="wrChat">💬 Use in chat</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="transModal">
+  <div class="modal wide trmodal">
+    <button class="x" data-close>×</button>
+    <h2>🌍 Translate a conversation</h2>
+    <p class="sub">Talk with someone who speaks another language. Each of you types or taps 🎙 on your own side.</p>
+    <div class="trlangs">
+      <label>You speak<select id="trA"></select></label>
+      <button type="button" class="trswap" id="trSwap" title="Swap languages" aria-label="Swap languages">⇄</button>
+      <label>They speak<select id="trB"></select></label>
+    </div>
+    <div class="trlog" id="trLog" aria-live="polite"></div>
+    <form class="trrow A" id="trFormA"><input type="text" id="trInA" maxlength="1000" autocomplete="off"><button type="button" class="ic" id="trMicA" aria-label="Speak (you)">🎙</button><button class="send" type="submit" aria-label="Translate">➤</button></form>
+    <form class="trrow B" id="trFormB"><input type="text" id="trInB" maxlength="1000" autocomplete="off"><button type="button" class="ic" id="trMicB" aria-label="Speak (them)">🎙</button><button class="send" type="submit" aria-label="Translate">➤</button></form>
+    <div class="linkrow"><label style="display:flex;align-items:center;gap:6px;margin:0;font-size:13px;color:var(--muted)"><input type="checkbox" id="trSpeak" checked> Read translations out loud</label><button class="linkish" id="trClear" type="button">Clear</button></div>
+  </div>
+</div>
+
+<div class="msgp" id="msgP" role="dialog" aria-label="Messages">
+  <div class="mwrap">
+    <aside class="mside">
+      <div class="mhead2"><h2>💬 Messages</h2><button class="abtn" id="msgClose" type="button">Close</button></div>
+      <div class="needuser" id="needUser" hidden>Pick a @username so friends can find you. <button class="linkish" id="needUserBtn" type="button">Set it up →</button></div>
+      <div class="mnew"><button type="button" class="abtn" id="nmBtn">✉️ New message</button><button type="button" class="abtn" id="ngBtn">👥 New group</button></div>
+      <div class="newbox" id="newBox" hidden>
+        <form id="newMsgForm" hidden><input type="text" id="nmUser" maxlength="21" placeholder="@username" autocomplete="off" autocapitalize="off"><button class="abtn white" type="submit">Start</button></form>
+        <form id="newGrpForm" hidden><input type="text" id="ngName" maxlength="50" placeholder="Group name (e.g. Bio study group)" autocomplete="off"><input type="text" id="ngUsers" placeholder="@usernames, separated by spaces" autocomplete="off" autocapitalize="off"><button class="abtn white" type="submit">Create group</button></form>
+        <form id="addPplForm" hidden><input type="text" id="apUsers" placeholder="@usernames to add" autocomplete="off" autocapitalize="off"><button class="abtn white" type="submit">Add to group</button></form>
+        <div class="msgline" id="newBoxMsg"></div>
+      </div>
+      <div class="rooms" id="roomList"></div>
+      <div class="mnote">Only the people in a conversation can see it. Type <b>@quorvyn</b> in any chat to ask Quorvyn. Be kind, and never share passwords or personal info.</div>
+    </aside>
+    <section class="mmain">
+      <div class="roomempty" id="roomEmpty"><div>💬</div>Pick a conversation, or start a new one.</div>
+      <div class="roompane" id="roomPane" hidden>
+        <div class="roomhead">
+          <button type="button" class="abtn roomback" id="roomBack" aria-label="Back to conversations">←</button>
+          <div class="rh"><b id="roomTitle"></b><small id="roomSub"></small></div>
+          <button type="button" class="abtn" id="roomAdd" hidden>+ Add people</button>
+          <button type="button" class="abtn" id="roomLeave" hidden>Leave</button>
+        </div>
+        <div class="roommsgs" id="roomMsgs"></div>
+        <form class="roomform" id="roomForm"><textarea id="roomIn" rows="1" maxlength="4000" placeholder="Message…"></textarea><button class="send" type="submit" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></form>
+      </div>
+    </section>
+  </div>
+</div>
+
 <div class="tour" id="tour" hidden>
   <div class="tourHole" id="tourHole"></div>
   <div class="tourTip" id="tourTip" role="dialog" aria-live="polite">
@@ -961,7 +1171,7 @@
   }
 
   // ---------- Email & calendar action cards ----------
-  const ACTION_RE = /```(email|event|task|flashcards|quiz)\s*\n?([\s\S]*?)```/g;
+  const ACTION_RE = /```(email|event|task|flashcards|quiz|calc)\s*\n?([\s\S]*?)```/g;
   function el(tag, attrs, text){
     const e = document.createElement(tag);
     for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
@@ -1063,7 +1273,7 @@
     const rest = text.replace(ACTION_RE, (m, kind, raw) => {
       try {
         const data = JSON.parse(raw.trim());
-        cards.push(kind === "email" ? emailCard(data) : kind === "event" ? eventCard(data) : studyCard(kind, data));
+        cards.push(kind === "email" ? emailCard(data) : kind === "event" ? eventCard(data) : kind === "calc" ? instantCard(data) : studyCard(kind, data));
         return `\n\n%%CARD${cards.length - 1}%%\n\n`;
       } catch { return m; }
     });
@@ -1301,6 +1511,7 @@
         syncStats();
         loadHistory();
         studyLogin();
+        chatLogin();
         notifyNewAccount();
         if (isAdmin) checkNewAccounts();
         if (ogPending) { ogPending = false; doClaimFlow(); }
@@ -1311,7 +1522,7 @@
           setTimeout(() => $("profUser").focus(), 50);
         }
       } else {
-        histBtn.hidden = true; closeDrawer();
+        histBtn.hidden = true; closeDrawer(); chatLogout();
         isAdmin = false; adminBtn.hidden = true; $("profBadge").hidden = true; $("adminP").classList.remove("open");
         profile = { name: "", about: "", photo: "", username: "" };
       }
@@ -1340,9 +1551,10 @@
     const ref = doc(fb.db, "users", user.uid);
     try {
       const snap = await getDoc(ref);
-      if (snap.exists()) profile = Object.assign({ name: "", about: "", photo: "", username: "" }, snap.data());
-      if (profile.weather && !wx) { wx = profile.weather; try { localStorage.setItem("qv-weather", JSON.stringify(wx)); } catch {} loadWeather(); }
-      else {
+      if (snap.exists()) {
+        profile = Object.assign({ name: "", about: "", photo: "", username: "" }, snap.data());
+        if (profile.weather && !wx) { wx = profile.weather; try { localStorage.setItem("qv-weather", JSON.stringify(wx)); } catch {} loadWeather(); }
+      } else {
         profile = { name: user.displayName || "", about: "", photo: user.photoURL || "" };
         await setDoc(ref, { ...profile, createdAt: serverTimestamp() });
       }
@@ -2246,6 +2458,7 @@
     e.preventDefault();
     if (busy) { controller && controller.abort(); return; }
     const t = input.value.trim(); if (!t && !hasPhoto()) return;
+    if (t && !hasPhoto() && tryInstant(t)) { input.value = ""; autosize(); updateSend(); return; }
     input.value = ""; autosize(); updateSend();
     ask(t || "Can you help me with this?");
   });
@@ -2413,7 +2626,7 @@
   // ---------- Study tools: tasks, flashcards, quizzes, stars, timer ----------
   // =====================================================================
   const STUDY_KEY = "qv-study";
-  const blankStudy = () => ({ tasks: [], decks: [], stars: [], days: [], focus: {}, quizzes: [], updated: 0 });
+  const blankStudy = () => ({ tasks: [], decks: [], stars: [], days: [], focus: {}, quizzes: [], countdowns: [], updated: 0 });
   let study = blankStudy();
   try { study = Object.assign(blankStudy(), JSON.parse(localStorage.getItem(STUDY_KEY) || "{}")); } catch {}
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -2445,7 +2658,7 @@
       } else if (study.updated) cloudSave();
     } catch (e) { console.warn("Couldn't load study tools", e); }
   }
-  function renderAllStudy(){ renderToday(); renderTasks(); renderDecks(); renderStars(); }
+  function renderAllStudy(){ renderToday(); renderTasks(); renderDecks(); renderStars(); renderCountdowns(); }
 
   // ---------- Small helpers ----------
   function toast(text, ms){
@@ -2472,7 +2685,7 @@
     try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(title, { body: body || "" }); } catch {}
   }
   function askNotify(){ try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch {} }
-  function stripBlocks(t){ return String(t || "").replace(/```(email|event|task|flashcards|quiz)[\s\S]*?```/g, "").trim(); }
+  function stripBlocks(t){ return String(t || "").replace(/```(email|event|task|flashcards|quiz|calc)[\s\S]*?```/g, "").trim(); }
   function looseJSON(text){
     const m = String(text).match(/```[a-z]*\s*\n?([\s\S]*?)```/i);
     const src = m ? m[1] : String(text);
@@ -2627,6 +2840,7 @@
     const stats = el("div", { class: "tds" });
     stats.append(el("span", null, n ? `🔥 ${n}-day streak` : "🔥 Start a streak"));
     if (focus) stats.append(el("span", null, `⏱ ${focus} focus`));
+    const cd = nearestCountdown(); if (cd) stats.append(el("span", null, `${cd.emoji || "⏳"} ${cd.name}: ${cdText(cd)}`));
     box.append(stats);
     const l = el("div", { class: "tdl" });
     if (due.length) due.slice(0, 3).forEach(t => l.append(taskRow(t, true)));
@@ -3039,6 +3253,501 @@
   });
 
   renderToday();
+
+  // =====================================================================
+  // ---------- Countdowns, instant calculator/converter, writing helper,
+  //            translator, messages (DMs + group chats) ----------
+  // =====================================================================
+
+  // Plain-text helper requests (writing helper, translator, group chats)
+  async function genText(kind, prompt, extra){
+    if (siteCfg.paused) throw new Error(siteCfg.pauseMsg || "Quorvyn is taking a quick break. Back soon!");
+    trackUsage();
+    const res = await fetch("/api/chat", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ messages: [{ role: "user", content: prompt.slice(0, 3900) }], gen: kind,
+        now: new Date().toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" }), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }, extra || {}))
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+    return String(data.text || "").replace(/^```[a-z]*\s*\n?|```\s*$/gi, "").trim();
+  }
+
+  // ---------- Countdowns ----------
+  if (!Array.isArray(study.countdowns)) study.countdowns = [];
+  function cdNext(c){
+    const today = new Date(ymd() + "T00:00");
+    let d = new Date(c.date + "T00:00"); if (isNaN(d)) return null;
+    if (c.yearly) { d.setFullYear(today.getFullYear()); if (d < today) d.setFullYear(today.getFullYear() + 1); }
+    return { date: d, days: Math.round((d - today) / 864e5) };
+  }
+  function cdText(c){
+    const n = cdNext(c); if (!n) return "";
+    if (n.days === 0) return "Today! 🎉";
+    if (n.days === 1) return "Tomorrow!";
+    if (n.days < 0) return `${-n.days} day${n.days === -1 ? "" : "s"} ago`;
+    return `${n.days} days`;
+  }
+  function sortedCds(){ return [...(study.countdowns || [])].sort((a, b) => ((cdNext(a) || {}).days ?? 1e9) - ((cdNext(b) || {}).days ?? 1e9)); }
+  function renderCountdowns(){
+    const row = $("cdRow"); if (!row) return;
+    row.innerHTML = "";
+    sortedCds().filter(c => (cdNext(c) || { days: -1 }).days >= -1).slice(0, 6).forEach(c => {
+      const b = el("button", { type: "button", class: "cd", title: "Countdowns" });
+      b.append(el("span", { class: "cde" }, c.emoji || "⏳"), el("span", { class: "cdn" }, c.name), el("b", null, cdText(c)));
+      b.onclick = openCountdowns; row.append(b);
+    });
+    const add = el("button", { type: "button", class: "cd add" }, study.countdowns.length ? "+ Countdown" : "⏳ Add a countdown (birthday, break, trip…)");
+    add.onclick = openCountdowns; row.append(add);
+    const list = $("cdList"); if (!list) return;
+    list.innerHTML = "";
+    if (!study.countdowns.length) list.append(el("div", { class: "empty" }, "No countdowns yet."));
+    sortedCds().forEach(c => {
+      const r = el("div", { class: "task" });
+      const n = cdNext(c);
+      const tt = el("div", { class: "tt" }, `${c.emoji || "⏳"} ${c.name}`);
+      tt.append(el("span", { class: "tdue" }, `${cdText(c)} · ${n ? n.date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" }) : ""}${c.yearly ? " · every year" : ""}`));
+      const del = el("button", { class: "tdel", type: "button", "aria-label": "Delete countdown" }, "×");
+      del.onclick = () => { study.countdowns = study.countdowns.filter(x => x.id !== c.id); saveStudy(); renderCountdowns(); renderToday(); };
+      r.append(tt, del); list.append(r);
+    });
+  }
+  function openCountdowns(){ renderCountdowns(); openModal("cdModal"); setTimeout(() => $("cdName").focus(), 50); }
+  $("cdForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = $("cdName").value.trim().slice(0, 60), date = $("cdDate").value;
+    if (!name || !date) return;
+    study.countdowns = [...study.countdowns, { id: uid(), name, date, emoji: $("cdEmoji").value, yearly: $("cdYearly").checked }].slice(-30);
+    saveStudy(); renderCountdowns(); renderToday();
+    $("cdName").value = ""; $("cdDate").value = ""; $("cdYearly").checked = false;
+  });
+  function nearestCountdown(){ return sortedCds().find(c => (cdNext(c) || { days: -1 }).days >= 0); }
+
+  // ---------- Instant calculator + unit converter (no AI needed) ----------
+  function calc(src){
+    const s = src.replace(/×/g, "*").replace(/÷/g, "/").replace(/π/g, "pi").replace(/(\d),(?=\d{3}\b)/g, "$1")
+      .replace(/(\d)\s*x\s*(?=[\d(.])/gi, "$1*").replace(/\*\*/g, "^");
+    const toks = s.match(/\d*\.?\d+(?:e[+-]?\d+)?|sqrt|pi|[-+*/^%()]|\S/gi) || [];
+    let i = 0;
+    const peek = () => toks[i], next = () => toks[i++];
+    function expr(){ let v = term(); while (peek() === "+" || peek() === "-") { const o = next(), r = term(); v = o === "+" ? v + r : v - r; } return v; }
+    function term(){ let v = power(); while (peek() === "*" || peek() === "/") { const o = next(), r = power(); v = o === "*" ? v * r : v / r; } return v; }
+    function power(){ const b = unary(); if (peek() === "^") { next(); return Math.pow(b, power()); } return b; }
+    function unary(){ if (peek() === "-") { next(); return -unary(); } if (peek() === "+") { next(); return unary(); } return postfix(); }
+    function postfix(){ let v = primary(); while (peek() === "%") { next(); v = v / 100; } return v; }
+    function primary(){
+      const t = next();
+      if (t === undefined) throw 0;
+      if (t === "(") { const v = expr(); if (next() !== ")") throw 0; return v; }
+      if (/^sqrt$/i.test(t)) { if (next() !== "(") throw 0; const v = expr(); if (next() !== ")") throw 0; return Math.sqrt(v); }
+      if (/^pi$/i.test(t)) return Math.PI;
+      if (/^\d*\.?\d+(e[+-]?\d+)?$/i.test(t)) return parseFloat(t);
+      throw 0;
+    }
+    const v = expr(); if (i !== toks.length || !isFinite(v)) throw 0;
+    return v;
+  }
+  const fmtNum = v => {
+    if (Math.abs(v) >= 1e15 || (Math.abs(v) < 1e-6 && v !== 0)) return v.toExponential(6).replace(/\.?0+e/, "e");
+    return Number(v.toPrecision(12)).toLocaleString(undefined, { maximumFractionDigits: 8 });
+  };
+  const U = {};    // alias -> [group, key, factor-to-base, label]
+  function defU(group, key, factor, label, aliases){ for (const a of [key, ...aliases]) U[a] = [group, key, factor, label]; }
+  [["length","m",1,"m",["meter","meters","metre","metres"]],["length","km",1000,"km",["kms","kilometer","kilometers","kilometre","kilometres"]],
+   ["length","cm",.01,"cm",["centimeter","centimeters","centimetre","centimetres"]],["length","mm",.001,"mm",["millimeter","millimeters","millimetre","millimetres"]],
+   ["length","mi",1609.344,"miles",["mile","miles"]],["length","yd",.9144,"yards",["yard","yards","yds"]],["length","ft",.3048,"feet",["foot","feet","'"]],
+   ["length","in",.0254,"inches",["inch","inches","\""]],["length","nmi",1852,"nautical miles",["nautical mile","nautical miles"]],
+   ["mass","kg",1,"kg",["kgs","kilo","kilos","kilogram","kilograms"]],["mass","g",.001,"g",["gm","gram","grams"]],["mass","mg",1e-6,"mg",["milligram","milligrams"]],
+   ["mass","lb",.45359237,"lb",["lbs","pound","pounds"]],["mass","oz",.028349523125,"oz",["ounce","ounces"]],["mass","st",6.35029318,"stone",["stone","stones"]],
+   ["mass","t",1000,"tonnes",["tonne","tonnes","metric ton","metric tons"]],
+   ["volume","l",1,"L",["liter","liters","litre","litres"]],["volume","ml",.001,"mL",["milliliter","milliliters","millilitre","millilitres"]],
+   ["volume","gal",3.785411784,"gallons",["gallon","gallons"]],["volume","qt",.946352946,"quarts",["quart","quarts"]],["volume","pt",.473176473,"pints",["pint","pints"]],
+   ["volume","cup",.2365882365,"cups",["cups"]],["volume","floz",.0295735295625,"fl oz",["fl oz","fluid ounce","fluid ounces"]],
+   ["volume","tbsp",.01478676478125,"tbsp",["tablespoon","tablespoons"]],["volume","tsp",.00492892159375,"tsp",["teaspoon","teaspoons"]],
+   ["speed","m/s",1,"m/s",["meters per second","mps"]],["speed","km/h",1/3.6,"km/h",["kph","kmh","kmph","kilometers per hour","kilometres per hour"]],
+   ["speed","mph",.44704,"mph",["miles per hour"]],["speed","kn",.514444,"knots",["knot","knots","kt"]],
+   ["time","s",1,"seconds",["sec","secs","second","seconds"]],["time","min",60,"minutes",["mins","minute","minutes"]],["time","h",3600,"hours",["hr","hrs","hour","hours"]],
+   ["time","day",86400,"days",["days"]],["time","week",604800,"weeks",["weeks","wk","wks"]],["time","month",2629746,"months",["months"]],["time","year",31556952,"years",["years","yr","yrs"]],
+   ["data","b",1,"bytes",["byte","bytes"]],["data","kb",1e3,"KB",["kilobyte","kilobytes"]],["data","mb",1e6,"MB",["megabyte","megabytes"]],
+   ["data","gb",1e9,"GB",["gigabyte","gigabytes"]],["data","tb",1e12,"TB",["terabyte","terabytes"]],
+   ["area","m2",1,"m²",["m²","sq m","square meter","square meters","square metre","square metres"]],["area","km2",1e6,"km²",["km²","sq km","square kilometer","square kilometers"]],
+   ["area","ft2",.09290304,"sq ft",["ft²","sq ft","square foot","square feet"]],["area","acre",4046.8564224,"acres",["acres"]],
+   ["area","ha",1e4,"hectares",["hectare","hectares"]],["area","mi2",2589988.110336,"sq mi",["mi²","sq mi","square mile","square miles"]],
+   ["temp","c",0,"°C",["°c","celsius","centigrade","degrees c","degrees celsius","deg c"]],["temp","f",0,"°F",["°f","fahrenheit","degrees f","degrees fahrenheit","deg f"]],
+   ["temp","k",0,"K",["kelvin","kelvins"]]
+  ].forEach(a => defU(...a));
+  const findU = w => U[String(w).toLowerCase().replace(/\s+/g, " ").replace(/\.$/, "").trim()];
+  function toC(v, u){ return u === "c" ? v : u === "f" ? (v - 32) * 5 / 9 : v - 273.15; }
+  function fromC(v, u){ return u === "c" ? v : u === "f" ? v * 9 / 5 + 32 : v + 273.15; }
+  function convert(text){
+    const t = text.trim().replace(/[?.!]+$/, "").replace(/^(convert|what is|what's|whats)\s+/i, "");
+    let m = t.match(/^(-?[\d.,]+)\s*([a-z°'"²/ .]+?)\s+(?:to|in|into|as|=)\s+([a-z°'"²/ .]+)$/i), val, a, b;
+    if (m) { val = m[1]; a = m[2]; b = m[3]; }
+    else if ((m = t.match(/^how many\s+([a-z°'"²/ .]+?)\s+(?:are\s+)?in\s+(-?[\d.,]+|an?|one)\s*([a-z°'"²/ .]+)$/i))) { b = m[1]; val = /^\d|-/.test(m[2]) ? m[2] : "1"; a = m[3]; }
+    else return null;
+    const ua = findU(a), ub = findU(b), v = parseFloat(String(val).replace(/,/g, ""));
+    if (!ua || !ub || ua[0] !== ub[0] || !isFinite(v)) return null;
+    const out = ua[0] === "temp" ? fromC(toC(v, ua[1]), ub[1]) : v * ua[2] / ub[2];
+    return { kind: "convert", input: `${fmtNum(v)} ${ua[3]}`, result: `${fmtNum(out)} ${ub[3]}` };
+  }
+  function instantAnswer(text){
+    const conv = convert(text); if (conv) return conv;
+    let e = text.trim().replace(/[?=]+$/, "").replace(/^(what is|what's|whats|calculate|calc|compute|solve)\s+/i, "").trim();
+    e = e.replace(/(\d+(?:\.\d+)?)\s*%\s*of\s*/gi, "($1/100)*");
+    if (!/^[\d\s.,+\-*/^%()×÷xπ]*(sqrt|pi)?[\d\s.,+\-*/^%()×÷xπsqrtpi]*$/i.test(e)) return null;
+    if (!/\d/.test(e) || !/[+\-*/^%×÷x]|sqrt|\(/i.test(e.replace(/^-/, ""))) return null;
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(e)) return null;   // looks like a date
+    try { return { kind: "calc", input: text.trim().replace(/[?=]+$/, ""), result: fmtNum(calc(e)) }; } catch { return null; }
+  }
+  function instantCard(d){
+    const card = el("div", { class: "card instant" });
+    card.append(el("div", { class: "ctitle" }, d.kind === "convert" ? "📏 UNIT CONVERTER" : "🧮 CALCULATOR"));
+    card.append(el("div", { class: "row" }, d.input + " ="));
+    card.append(el("div", { class: "ires" }, d.result));
+    const btns = el("div", { class: "btns" }); btns.append(copyBtn("Copy answer", d.result));
+    card.append(btns, el("div", { class: "hint" }, "Worked out instantly on your device."));
+    return card;
+  }
+  function tryInstant(text){
+    const d = instantAnswer(text); if (!d || busy) return false;
+    if (siteCfg.paused) return false;
+    addMsg("user", text);
+    const reply = "```calc\n" + JSON.stringify(d) + "\n```";
+    history.push({ role: "user", content: text }, { role: "assistant", content: reply });
+    const b = addMsg("ai", ""); renderReply(b, reply); addActions(b, `${d.input} = ${d.result}`);
+    markStudied(); saveChat(); scrollDown();
+    return true;
+  }
+
+  // ---------- Writing helper ----------
+  const WRITE = {
+    fix: "Fix the spelling, grammar and punctuation of the text below. Keep the meaning, tone and language the same.",
+    shorter: "Make the text below shorter and clearer. Keep the key points and the same language.",
+    formal: "Rewrite the text below to sound more formal and professional. Keep the meaning and the same language.",
+    casual: "Rewrite the text below to sound more casual and friendly. Keep the meaning and the same language.",
+    bullets: "Turn the text below into clear, short bullet points (use \"- \" for each bullet). Keep the same language.",
+    longer: "Expand the text below with a bit more detail and smoother flow. Don't invent facts. Keep the same language."
+  };
+  let writeOut = "";
+  $("wrModes").addEventListener("click", async e => {
+    const b = e.target.closest("[data-mode]"); if (!b) return;
+    const src = $("wrIn").value.trim();
+    if (!src) { $("wrMsg").textContent = "Paste or type some text first."; $("wrMsg").className = "msgline bad"; $("wrIn").focus(); return; }
+    $("wrModes").querySelectorAll("button").forEach(x => x.disabled = true);
+    $("wrMsg").textContent = "Rewriting…"; $("wrMsg").className = "msgline"; $("wrOutBox").hidden = true;
+    try {
+      writeOut = await genText("write", `${WRITE[b.dataset.mode]}\n\nText:\n"""${src.slice(0, 3500)}"""`);
+      $("wrOut").textContent = writeOut; $("wrOutBox").hidden = false; $("wrMsg").textContent = "";
+    } catch (err) { $("wrMsg").textContent = err.message; $("wrMsg").className = "msgline bad"; }
+    finally { $("wrModes").querySelectorAll("button").forEach(x => x.disabled = false); }
+  });
+  $("wrCopy").onclick = async () => { try { await navigator.clipboard.writeText(writeOut); toast("Copied ✓", 1500); } catch { toast("Couldn't copy."); } };
+  $("wrAgain").onclick = () => { $("wrIn").value = writeOut; $("wrOutBox").hidden = true; $("wrIn").focus(); };
+  $("wrChat").onclick = () => { closeModal("writeModal"); input.value = writeOut; autosize(); updateSend(); input.focus(); };
+  function openWrite(){ $("wrMsg").textContent = ""; openModal("writeModal"); setTimeout(() => $("wrIn").focus(), 50); }
+
+  // ---------- Conversation translator ----------
+  const LANGS = [["en-US","English"],["es-ES","Spanish"],["fr-FR","French"],["de-DE","German"],["it-IT","Italian"],["pt-BR","Portuguese"],
+    ["zh-CN","Chinese (Mandarin)"],["ja-JP","Japanese"],["ko-KR","Korean"],["ar-SA","Arabic"],["hi-IN","Hindi"],["ru-RU","Russian"],
+    ["vi-VN","Vietnamese"],["tl-PH","Tagalog"],["pl-PL","Polish"],["uk-UA","Ukrainian"],["tr-TR","Turkish"],["nl-NL","Dutch"],["el-GR","Greek"],
+    ["he-IL","Hebrew"],["id-ID","Indonesian"],["th-TH","Thai"],["sv-SE","Swedish"],["ht-HT","Haitian Creole"]];
+  const langName = c => (LANGS.find(l => l[0] === c) || [c, c])[1];
+  ["trA", "trB"].forEach((id, k) => {
+    const s = $(id);
+    LANGS.forEach(([c, n]) => s.append(el("option", { value: c }, n)));
+    let saved = ""; try { saved = localStorage.getItem("qv-" + id) || ""; } catch {}
+    const nav = (navigator.language || "en").slice(0, 2);
+    s.value = saved || (k === 0 ? (LANGS.find(l => l[0].startsWith(nav)) || LANGS[0])[0] : (nav === "es" ? "en-US" : "es-ES"));
+    s.onchange = () => { try { localStorage.setItem("qv-" + id, s.value); } catch {} trLabels(); };
+  });
+  function trLabels(){
+    $("trInA").placeholder = `You speak ${langName($("trA").value)}…`;
+    $("trInB").placeholder = `They speak ${langName($("trB").value)}…`;
+  }
+  trLabels();
+  $("trSwap").onclick = () => { const a = $("trA").value; $("trA").value = $("trB").value; $("trB").value = a; $("trA").onchange(); $("trB").onchange(); };
+  function sayIn(text, lang){
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text); u.lang = lang;
+      const v = speechSynthesis.getVoices().find(v => v.lang === lang) || speechSynthesis.getVoices().find(v => v.lang && v.lang.slice(0, 2) === lang.slice(0, 2));
+      if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch {}
+  }
+  async function translateTurn(side){
+    const inp = side === "A" ? $("trInA") : $("trInB"), text = inp.value.trim(); if (!text) return;
+    const from = side === "A" ? $("trA").value : $("trB").value, to = side === "A" ? $("trB").value : $("trA").value;
+    inp.value = "";
+    const log = $("trLog"); log.querySelector(".empty") && log.innerHTML === log.querySelector(".empty").outerHTML && (log.innerHTML = "");
+    const b = el("div", { class: "trb " + side });
+    b.append(el("div", { class: "tro" }, text)); const tr = el("div", { class: "trt" }, "Translating…"); b.append(tr);
+    log.append(b); log.scrollTop = log.scrollHeight;
+    try {
+      const out = await genText("translate", `Translate this from ${langName(from)} to ${langName(to)}. Reply with only the translation.\n\n"""${text}"""`);
+      tr.textContent = out;
+      const say = el("button", { type: "button", class: "trsay", title: "Say it again" }, "🔊"); say.onclick = () => sayIn(out, to); b.append(say);
+      if ($("trSpeak").checked) sayIn(out, to);
+    } catch (e) { tr.textContent = e.message; tr.classList.add("err"); }
+    log.scrollTop = log.scrollHeight;
+  }
+  $("trFormA").addEventListener("submit", e => { e.preventDefault(); translateTurn("A"); });
+  $("trFormB").addEventListener("submit", e => { e.preventDefault(); translateTurn("B"); });
+  const TRSR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  ["A", "B"].forEach(side => {
+    const mic = $("trMic" + side);
+    if (!TRSR) { mic.hidden = true; return; }
+    let rec = null;
+    mic.onclick = () => {
+      if (rec) { rec.stop(); return; }
+      rec = new TRSR(); rec.lang = side === "A" ? $("trA").value : $("trB").value; rec.interimResults = true;
+      const inp = $("trIn" + side);
+      rec.onresult = ev => { let t = ""; for (const r of ev.results) t += r[0].transcript; inp.value = t; };
+      rec.onend = () => { mic.classList.remove("listening"); rec = null; if (inp.value.trim()) translateTurn(side); };
+      rec.onerror = () => { mic.classList.remove("listening"); rec = null; };
+      mic.classList.add("listening");
+      try { rec.start(); } catch { mic.classList.remove("listening"); rec = null; }
+    };
+  });
+  $("trClear").onclick = () => { $("trLog").innerHTML = ""; $("trLog").append(el("div", { class: "empty" }, "Type or tap 🎙 on your side. Quorvyn translates and reads it out loud for the other person.")); };
+  $("trClear").onclick();
+  function openTranslate(){ openModal("transModal"); setTimeout(() => $("trInA").focus(), 50); }
+
+  // ---------- Messages: direct messages + group chats ----------
+  const msgP = $("msgP"), msgBtn = $("msgBtn");
+  let rooms = [], roomsUnsub = null, msgsUnsub = null, curRoom = null, curMsgs = [], roomsReady = false, chatStart = 0;
+  const tsMs = t => t && t.toMillis ? t.toMillis() : (typeof t === "number" ? t : 0);
+  const readKey = id => "qv-read-" + id;
+  const lastRead = id => { try { return Number(localStorage.getItem(readKey(id)) || 0); } catch { return 0; } };
+  const markRead = r => { try { localStorage.setItem(readKey(r.id), String(Math.max(Date.now(), tsMs(r.updatedAt)))); } catch {} };
+  const isUnread = r => r.lastBy && user && r.lastBy !== user.uid && tsMs(r.updatedAt) > lastRead(r.id) && !(curRoom && curRoom.id === r.id && msgP.classList.contains("open"));
+  function roomTitle(r){
+    if (r.type === "group") return r.name || "Group chat";
+    const other = (r.members || []).find(u => u !== (user && user.uid));
+    const info = (r.memberInfo || {})[other] || {};
+    return info.username ? "@" + info.username : (info.name || "Direct message");
+  }
+  function myInfo(){ return { username: profile.username || "", name: (profile.name || "").slice(0, 60) }; }
+  function chatErr(e){
+    console.warn("messages", e);
+    const denied = e && /permission/i.test(e.code || e.message || "");
+    return denied ? "Messaging isn't switched on yet. The site owner needs to add the chat rules in Firebase (see firebase-chat-rules.txt)." : "Couldn't reach messages. Check your connection and try again.";
+  }
+  function chatLogin(){
+    chatLogout();
+    if (!user || !fb) return;
+    msgBtn.hidden = false; chatStart = Date.now();
+    const { collection, query, where, onSnapshot } = fb.F;
+    roomsUnsub = onSnapshot(query(collection(fb.db, "rooms"), where("members", "array-contains", user.uid)), snap => {
+      const before = new Map(rooms.map(r => [r.id, tsMs(r.updatedAt)]));
+      rooms = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.updatedAt) - tsMs(a.updatedAt));
+      if (roomsReady) rooms.forEach(r => {
+        if (isUnread(r) && tsMs(r.updatedAt) > (before.get(r.id) || chatStart)) {
+          const who = (r.memberInfo || {})[r.lastBy] || {};
+          const from = r.lastText && r.lastText.startsWith("🤖") ? "Quorvyn" : (who.username ? "@" + who.username : "Someone");
+          toast(`💬 ${from}${r.type === "group" ? " in " + roomTitle(r) : ""}: ${String(r.lastText || "").replace(/^🤖\s*/, "").slice(0, 70)}`, 5000);
+          try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification("New message on Quorvyn", { body: `${from}: ${r.lastText || ""}` }); } catch {}
+        }
+      });
+      roomsReady = true;
+      if (curRoom) { const r = rooms.find(x => x.id === curRoom.id); if (r) { curRoom = r; drawRoomHead(); } }
+      drawRooms();
+    }, e => { $("roomList").innerHTML = ""; $("roomList").append(el("div", { class: "empty" }, chatErr(e))); });
+  }
+  function chatLogout(){
+    if (roomsUnsub) roomsUnsub(); if (msgsUnsub) msgsUnsub();
+    roomsUnsub = msgsUnsub = null; rooms = []; curRoom = null; curMsgs = []; roomsReady = false;
+    msgBtn.hidden = true; msgBtn.classList.remove("has-unread"); msgP.classList.remove("open");
+  }
+  function drawRooms(){
+    const list = $("roomList"); list.innerHTML = "";
+    const unread = rooms.filter(isUnread).length;
+    msgBtn.classList.toggle("has-unread", unread > 0);
+    msgBtn.title = unread ? `Messages (${unread} unread)` : "Messages";
+    if (!rooms.length) { list.append(el("div", { class: "empty" }, "No conversations yet. Start one with ✉️ New message or 👥 New group.")); return; }
+    rooms.forEach(r => {
+      const row = el("button", { type: "button", class: "room" + (curRoom && curRoom.id === r.id ? " active" : "") + (isUnread(r) ? " unread" : "") });
+      const t = roomTitle(r);
+      row.append(el("span", { class: "rava" + (r.type === "group" ? " grp" : "") }, r.type === "group" ? "👥" : (t.replace("@", "")[0] || "?").toUpperCase()));
+      const info = el("span", { class: "rinfo" }); info.append(el("b", null, t), el("small", null, r.lastText || (r.type === "group" ? `${(r.members || []).length} members` : "Say hi 👋")));
+      row.append(info);
+      row.onclick = () => openRoom(r);
+      list.append(row);
+    });
+  }
+  function drawRoomHead(){
+    const r = curRoom; if (!r) return;
+    $("roomTitle").textContent = roomTitle(r);
+    const names = (r.members || []).map(u => u === user.uid ? "you" : "@" + (((r.memberInfo || {})[u] || {}).username || "…"));
+    $("roomSub").textContent = r.type === "group" ? names.join(", ") : "Direct message · type @quorvyn to ask Quorvyn";
+    $("roomAdd").hidden = $("roomLeave").hidden = r.type !== "group";
+  }
+  function openRoom(r){
+    if (msgsUnsub) msgsUnsub();
+    curRoom = r; curMsgs = []; markRead(r);
+    msgP.classList.add("inroom"); $("roomPane").hidden = false; $("roomEmpty").hidden = true;
+    drawRoomHead(); drawRooms();
+    $("roomMsgs").innerHTML = ""; $("roomMsgs").append(el("div", { class: "empty" }, "Loading…"));
+    const { collection, query, orderBy, limit, onSnapshot } = fb.F;
+    msgsUnsub = onSnapshot(query(collection(fb.db, "rooms", r.id, "messages"), orderBy("at", "desc"), limit(100)), snap => {
+      curMsgs = snap.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+      drawMsgs(); markRead(curRoom); drawRooms();
+    }, e => { $("roomMsgs").innerHTML = ""; $("roomMsgs").append(el("div", { class: "empty" }, chatErr(e))); });
+    setTimeout(() => $("roomIn").focus(), 50);
+    // keep my name card in the room up to date
+    const mi = (r.memberInfo || {})[user.uid] || {};
+    if (mi.username !== profile.username) fb.F.updateDoc(fb.F.doc(fb.db, "rooms", r.id), { ["memberInfo." + user.uid]: myInfo() }).catch(() => {});
+  }
+  function drawMsgs(){
+    const box = $("roomMsgs"), atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+    box.innerHTML = "";
+    if (!curMsgs.length) box.append(el("div", { class: "empty" }, curRoom.type === "group" ? "No messages yet. Say hi! Tip: type @quorvyn to ask Quorvyn something in the group." : "No messages yet. Say hi 👋"));
+    let lastDay = "";
+    curMsgs.forEach((m, k) => {
+      const t = m.at && m.at.toDate ? m.at.toDate() : new Date();
+      const day = t.toDateString();
+      if (day !== lastDay) { box.append(el("div", { class: "mday" }, t.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }))); lastDay = day; }
+      const mine = m.uid === user.uid && !m.ai, prev = curMsgs[k - 1];
+      const sameAsPrev = prev && prev.uid === m.uid && !!prev.ai === !!m.ai && (tsMs(m.at) - tsMs(prev.at) < 5 * 60e3);
+      const row = el("div", { class: "mrow" + (mine ? " mine" : "") + (m.ai ? " bot" : "") });
+      if (!sameAsPrev && !mine) row.append(el("div", { class: "mwho" }, m.ai ? `Quorvyn ✨${m.askedBy ? " · asked by @" + m.askedBy : ""}` : "@" + (m.username || "someone")));
+      const bub = el("div", { class: "mbub" });
+      if (m.ai) bub.innerHTML = md(String(m.text || "")); else bub.textContent = m.text;
+      bub.title = t.toLocaleString();
+      row.append(bub);
+      if (m.uid === user.uid) {
+        const del = el("button", { type: "button", class: "mdel", title: "Delete message", "aria-label": "Delete message" }, "×");
+        del.onclick = () => { if (confirm("Delete this message for everyone?")) fb.F.deleteDoc(fb.F.doc(fb.db, "rooms", curRoom.id, "messages", m.id)).catch(e => toast(chatErr(e))); };
+        row.append(del);
+      }
+      box.append(row);
+    });
+    if (atBottom || box.dataset.room !== curRoom.id) box.scrollTop = box.scrollHeight;
+    box.dataset.room = curRoom.id;
+  }
+  async function postMsg(room, data, preview){
+    const { collection, addDoc, updateDoc, doc, serverTimestamp } = fb.F;
+    await addDoc(collection(fb.db, "rooms", room.id, "messages"), { uid: user.uid, username: profile.username || "", at: serverTimestamp(), ...data });
+    updateDoc(doc(fb.db, "rooms", room.id), { lastText: preview.replace(/[*_`#>]+/g, "").replace(/\s+/g, " ").slice(0, 90), lastBy: user.uid, updatedAt: serverTimestamp(), ["memberInfo." + user.uid]: myInfo() }).catch(() => {});
+  }
+  $("roomForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const text = $("roomIn").value.trim(); if (!text || !curRoom) return;
+    if (!profile.username) { toast("Pick a username in your profile first."); return; }
+    const room = curRoom; $("roomIn").value = ""; $("roomIn").style.height = "auto";
+    try { await postMsg(room, { text: text.slice(0, 4000) }, text); markStudied(); }
+    catch (err) { $("roomIn").value = text; toast(chatErr(err)); return; }
+    if (/@quorvyn\b/i.test(text)) askQuorvynInRoom(room, text);
+  });
+  $("roomIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("roomForm").requestSubmit(); } });
+  $("roomIn").addEventListener("input", e => { e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 140) + "px"; });
+  async function askQuorvynInRoom(room, text){
+    const typing = el("div", { class: "mrow bot" }); typing.append(el("div", { class: "mwho" }, "Quorvyn ✨"), el("div", { class: "mbub thinking-txt" }, "Thinking…"));
+    if (curRoom && curRoom.id === room.id) { $("roomMsgs").append(typing); $("roomMsgs").scrollTop = $("roomMsgs").scrollHeight; }
+    const lines = curMsgs.slice(-20).map(m => `${m.ai ? "Quorvyn" : "@" + (m.username || "someone")}: ${String(m.text || "").slice(0, 400)}`);
+    if (!curMsgs.length || curMsgs[curMsgs.length - 1].text !== text) lines.push(`@${profile.username}: ${text}`);
+    const where = room.type === "group" ? `a group chat called "${room.name || "Group chat"}"` : "a direct message between two friends";
+    try {
+      const reply = await genText("group", `You're in ${where}. Recent messages, oldest first:\n${lines.join("\n").slice(-3200)}\n\nReply to @${profile.username}'s latest message to you.`);
+      await postMsg(room, { text: reply.slice(0, 4000), ai: true, askedBy: profile.username || "" }, "🤖 " + reply);
+    } catch (e) { toast("Quorvyn couldn't answer: " + (e.message || "try again")); }
+    typing.remove();
+  }
+  async function findUser(name){
+    const u = String(name || "").trim().replace(/^@/, "").toLowerCase();
+    if (!/^[a-z0-9_]{3,20}$/.test(u)) throw new Error(`“${name}” isn't a valid username.`);
+    const snap = await fb.F.getDoc(fb.F.doc(fb.db, "usernames", u));
+    if (!snap.exists()) throw new Error(`No one has the username @${u}.`);
+    return { uid: snap.data().uid, username: u };
+  }
+  async function startDM(name){
+    const them = await findUser(name);
+    if (them.uid === user.uid) throw new Error("That's you! Pick someone else.");
+    const id = "dm_" + [user.uid, them.uid].sort().join("_");
+    const { doc, getDoc, setDoc, serverTimestamp } = fb.F, ref = doc(fb.db, "rooms", id);
+    let exists = false; try { exists = (await getDoc(ref)).exists(); } catch {}
+    if (!exists) await setDoc(ref, { type: "dm", members: [user.uid, them.uid], memberInfo: { [user.uid]: myInfo(), [them.uid]: { username: them.username } },
+      createdBy: user.uid, name: "", lastText: "", lastBy: "", updatedAt: serverTimestamp() });
+    return { id, type: "dm", members: [user.uid, them.uid], memberInfo: { [user.uid]: myInfo(), [them.uid]: { username: them.username } } };
+  }
+  async function resolveMany(text){
+    const names = [...new Set(String(text).split(/[\s,]+/).map(s => s.replace(/^@/, "").toLowerCase()).filter(Boolean))];
+    if (!names.length) throw new Error("Add at least one @username.");
+    if (names.length > 19) throw new Error("Groups can have up to 20 people.");
+    const people = [];
+    for (const n of names) { const p = await findUser(n); if (p.uid !== user.uid) people.push(p); }
+    if (!people.length) throw new Error("Add at least one other person.");
+    return people;
+  }
+  async function startGroup(name, who){
+    const people = await resolveMany(who);
+    const { collection, addDoc, serverTimestamp } = fb.F;
+    const memberInfo = { [user.uid]: myInfo() }; people.forEach(p => memberInfo[p.uid] = { username: p.username });
+    const data = { type: "group", name: name.slice(0, 50) || "Group chat", members: [user.uid, ...people.map(p => p.uid)], memberInfo,
+      createdBy: user.uid, lastText: `@${profile.username} created the group`, lastBy: user.uid, updatedAt: serverTimestamp() };
+    const ref = await addDoc(collection(fb.db, "rooms"), data);
+    return { id: ref.id, ...data };
+  }
+  function showNew(kind){
+    $("newMsgForm").hidden = kind !== "dm"; $("newGrpForm").hidden = kind !== "group"; $("addPplForm").hidden = kind !== "add";
+    $("newBoxMsg").textContent = ""; $("newBox").hidden = !kind;
+    const f = kind === "dm" ? "nmUser" : kind === "group" ? "ngName" : kind === "add" ? "apUsers" : null;
+    if (f) setTimeout(() => $(f).focus(), 30);
+  }
+  function newErr(e){ $("newBoxMsg").textContent = e.code ? chatErr(e) : (e.message || "Something went wrong."); $("newBoxMsg").className = "msgline bad"; }
+  $("nmBtn").onclick = () => showNew($("newMsgForm").hidden ? "dm" : null);
+  $("ngBtn").onclick = () => showNew($("newGrpForm").hidden ? "group" : null);
+  $("roomAdd").onclick = () => { showNew("add"); msgP.classList.remove("inroom"); };
+  $("newMsgForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    try { const r = await startDM($("nmUser").value); $("nmUser").value = ""; showNew(null); openRoom(rooms.find(x => x.id === r.id) || r); } catch (err) { newErr(err); }
+  });
+  $("newGrpForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    try { const r = await startGroup($("ngName").value.trim(), $("ngUsers").value); $("ngName").value = $("ngUsers").value = ""; showNew(null); openRoom(r); } catch (err) { newErr(err); }
+  });
+  $("addPplForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!curRoom) return;
+    try {
+      const people = await resolveMany($("apUsers").value);
+      if ((curRoom.members || []).length + people.length > 20) throw new Error("Groups can have up to 20 people.");
+      const { doc, updateDoc, arrayUnion, serverTimestamp } = fb.F, upd = { members: arrayUnion(...people.map(p => p.uid)), updatedAt: serverTimestamp(),
+        lastText: `@${profile.username} added ${people.map(p => "@" + p.username).join(", ")}`, lastBy: user.uid };
+      people.forEach(p => upd["memberInfo." + p.uid] = { username: p.username });
+      await updateDoc(doc(fb.db, "rooms", curRoom.id), upd);
+      $("apUsers").value = ""; showNew(null); msgP.classList.add("inroom");
+    } catch (err) { newErr(err); }
+  });
+  $("roomLeave").onclick = async () => {
+    if (!curRoom || !confirm(`Leave “${roomTitle(curRoom)}”? You won't see new messages.`)) return;
+    try {
+      const { doc, updateDoc, arrayRemove, serverTimestamp } = fb.F;
+      await updateDoc(doc(fb.db, "rooms", curRoom.id), { members: arrayRemove(user.uid), lastText: `@${profile.username} left`, lastBy: user.uid, updatedAt: serverTimestamp() });
+      if (msgsUnsub) msgsUnsub(); msgsUnsub = null; curRoom = null;
+      $("roomPane").hidden = true; $("roomEmpty").hidden = false; msgP.classList.remove("inroom");
+    } catch (e) { toast(chatErr(e)); }
+  };
+  $("roomBack").onclick = () => { msgP.classList.remove("inroom"); };
+  function openMessages(){
+    hidePops(); closeMenu();
+    if (!user) { openModal("authModal"); return; }
+    msgP.classList.add("open");
+    $("needUser").hidden = !!profile.username;
+    if (curRoom) { markRead(curRoom); drawRooms(); }
+    askNotify();
+  }
+  function closeMessages(){ msgP.classList.remove("open"); drawRooms(); }
+  msgBtn.onclick = e => { e.stopPropagation(); openMessages(); };
+  $("msgClose").onclick = closeMessages;
+  $("needUserBtn").onclick = () => { closeMessages(); openProfile(); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && msgP.classList.contains("open") && !document.querySelector(".overlay.open")) closeMessages(); });
+
+  // Extra study-tool menu entries
+  const toolMap = { countdown: openCountdowns, write: openWrite, translate: openTranslate, messages: openMessages };
+  document.querySelectorAll("[data-tool2]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); hidePops(); toolMap[b.dataset.tool2](); }));
+  renderCountdowns();
+  setInterval(renderCountdowns, 60 * 60e3);
 
   statusDot.classList.remove("off"); statusDot.title = "Online";
   updateSend();

@@ -124,9 +124,13 @@ async function handle(req, env) {
     system += `\nHINTS MODE IS ON: act as a patient tutor. Don't give the final answer to homework-style problems right away. Explain the idea, break it into steps, show how to do the FIRST step, then ask the student to try the next one. Give the next hint when they reply. Check their work kindly. Only give the full answer if they've tried and ask for it again, or the question is not homework (facts, definitions, planning).`;
   }
 
-  // Background requests from the flashcard and quiz makers
-  const gen = body.gen === "flashcards" || body.gen === "quiz" ? body.gen : "";
-  if (gen) system += `\nReply with ONLY one \`\`\`${gen} block in the exact format above, no other text. Make sure it is valid JSON.`;
+  // Background requests: flashcard/quiz makers, writing helper, translator, group chats
+  const gen = ["flashcards", "quiz", "write", "translate", "group"].includes(body.gen) ? body.gen : "";
+  const big = gen === "flashcards" || gen === "quiz";
+  if (big) system += `\nReply with ONLY one \`\`\`${gen} block in the exact format above, no other text. Make sure it is valid JSON.`;
+  if (gen === "write") system += `\nYou are a writing helper. Reply with ONLY the rewritten text: no intro, no explanation, no quotes around it, no code block.`;
+  if (gen === "translate") system += `\nYou are a live translator between two people talking. Reply with ONLY the translation, in natural everyday wording. No notes, no quotes, no romanization unless the target language normally uses it.`;
+  if (gen === "group") system += `\nYou were mentioned with @quorvyn in a chat between friends on Quorvyn. Answer the person who asked, casually and helpfully, in 1 to 4 short sentences unless they ask for more. Use their @username if it helps. Don't use the email, event, task, flashcards or quiz blocks. Don't start with "Quorvyn:".`;
 
   // Voice chat: short, natural, speakable answers
   if (body.voice === true) {
@@ -146,7 +150,7 @@ async function handle(req, env) {
   const payload = JSON.stringify({
     systemInstruction: { parts: [{ text: system }] },
     contents,
-    generationConfig: { maxOutputTokens: gen ? 2048 : MAX_TOKENS, temperature: gen ? 0.4 : 0.7 }
+    generationConfig: { maxOutputTokens: big ? 2048 : MAX_TOKENS, temperature: big || gen === "write" || gen === "translate" ? 0.3 : 0.7 }
   });
   const call = (m) => fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`,
