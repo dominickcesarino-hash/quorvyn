@@ -44,6 +44,8 @@
   .navic[aria-pressed="true"]{background:var(--glass2)}
   body.signedin #voiceBtn{display:none}
   .navR .acct{margin-left:2px}
+  .clock{padding:0 8px 0 10px; font-size:12.5px; font-weight:500; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; letter-spacing:.02em}
+  @media (max-width:360px){ .clock{display:none} }
   .caret{font-size:10px; opacity:.6; margin-left:2px}
   .amenu{position:fixed; top:68px; right:14px; z-index:45; width:250px; padding:8px; border-radius:20px; background:rgba(26,21,42,.92);
     border:1px solid var(--line); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); box-shadow:0 30px 80px rgba(0,0,0,.45); animation:in .18s ease}
@@ -370,6 +372,7 @@
   <div class="brand"><span class="mini"></span>QUORVYN<span class="brandsub">Study and Assistant</span><span class="dot off" id="status"></span></div>
 </nav>
 <nav class="navR">
+  <time class="clock" id="clock" aria-label="Current time"></time>
   <button class="navic" id="helpBtn" title="Help and tour" aria-label="Help and tour">?</button>
   <button class="navic" id="newBtn" title="New chat" aria-label="New chat">＋</button>
   <button class="navic" id="voiceBtn" aria-pressed="false" title="Read replies aloud" aria-label="Read replies aloud">🔊</button>
@@ -2070,6 +2073,14 @@
   statusDot.classList.remove("off"); statusDot.title = "Online";
   updateSend();
   input.focus();
+})();
+
+// Small clock in the top-right corner
+(function(){
+  const el=document.getElementById('clock'); if(!el) return;
+  const fmt=new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit'});
+  const tick=()=>{ const d=new Date(); el.textContent=fmt.format(d); el.dateTime=d.toISOString(); setTimeout(tick,60000-d.getSeconds()*1000-d.getMilliseconds()+50); };
+  tick();
 })();
 </script>
 </body>
